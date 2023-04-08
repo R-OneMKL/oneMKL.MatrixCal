@@ -17,11 +17,12 @@
 
 #' @importFrom rlang env_unlock env_binding_unlock env_binding_lock env_lock
 
-old_solve <- NULL
+#' @export
+old_base_solve <- NULL
 
 .onAttach <- function(libname, pkgname) {
   # replace solve due to the broken issue
-  old_solve <- solve
+  old_base_solve <- base::solve
   packageStartupMessage("Replace base::solve with oneMKLUtil::oneMKLUtilSolve.\n")
   rlang::env_unlock(env = asNamespace('base'))
   rlang::env_binding_unlock(env = asNamespace('base'))
@@ -34,7 +35,7 @@ old_solve <- NULL
   packageStartupMessage("Recover base::solve.\n")
   rlang::env_unlock(env = asNamespace('base'))
   rlang::env_binding_unlock(env = asNamespace('base'))
-  assign('solve', old_solve, envir = asNamespace('base'))
+  assign('solve', old_base_solve, envir = asNamespace('base'))
   rlang::env_binding_lock(env = asNamespace('base'))
   rlang::env_lock(asNamespace('base'))
 }
