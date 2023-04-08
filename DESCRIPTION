@@ -1,0 +1,36 @@
+Package: oneMKLUtil
+Type: Package
+Title: Utility functions based on OneMKL
+Version: 0.1.2022
+Authors@R: c(
+    person(given = "Pei-Shan",
+           family = "Yen", 
+           email = "peishan0824@gmail.com",
+           role = c("aut"), 
+           comment = c(ORCID = '0000-0001-7386-0552')),
+    person(given = "Chia-Wei",
+           family = "Kuo",
+           email = "phxiranter@gmail.com",
+           role = c("aut"),
+           comment = c(ORCID = '0000-0002-6096-5184')),
+    person(given = "Ching-Chuan",
+           family = "Chen",
+           role = c("aut", "cre"),
+           email = "zw12356@gmail.com",
+           comment = c(ORCID = '0009-0007-8273-3206'))
+    )
+Author: 
+  Pei-Shan Yen [aut] (<https://orcid.org/0000-0001-7386-0552>), 
+  Chia-Wei Kuo [aut] (<https://orcid.org/0000-0002-6096-5184>), 
+  Ching-Chuan Chen [aut, cre] (<https://orcid.org/0009-0007-8273-3206>)
+Maintainer: Ching-Chuan Chen <zw12356@gmail.com>
+Description: The `oneMKLUtil` package provide some utiliy functions based on `oneMKL` package.
+Depends: R (>= 4.2.0)
+Imports: utils, Rcpp (>= 1.0.0), roxygen2, pkgKitten (>= 0.1.2)
+Suggests: RUnit
+LinkingTo: Rcpp, RcppArmadillo, oneMKL
+License: GPL-3
+URL: https://github.com/R-OneMKL/oneMKLUtil
+BugReports: https://github.com/R-OneMKL/oneMKLUtil/issues
+Encoding: UTF-8
+RoxygenNote: 7.2.3
