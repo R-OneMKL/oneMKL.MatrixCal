@@ -41,8 +41,9 @@ std::string getMKLVersion() {
 //' @return The number of threads.
 //'
 //' @examples
+//' getMKLThreads() # Default is the number of CPUs cores on your PC
+//'
 //' \dontrun{
-//' getMKLThreads() # Default is the number of cores your CPU has
 //' setMKLThreads(1)
 //' getMKLThreads() # 1
 //' }
