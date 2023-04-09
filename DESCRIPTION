@@ -1,6 +1,6 @@
 Package: oneMKLUtil
 Type: Package
-Title: Utility functions based on OneMKL
+Title: Utility Functions Based on OneMKL
 Version: 0.1.2022
 Authors@R: c(
     person(given = "Pei-Shan",
