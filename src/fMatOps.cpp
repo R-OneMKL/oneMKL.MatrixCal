@@ -19,8 +19,7 @@
 #include <RcppArmadillo.h>
 #include <string>
 
-// [[Rcpp::depends(oneMKL)]]
-// [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::depends(oneMKL, RcppArmadillo)]]
 
 //' Functions to use MKL to do the matrix calculations
 //'
@@ -35,7 +34,6 @@
 //' XtX2 <- fMatTransProd(x, x)
 //' all.equal(XtX, XtX2) # TRUE
 //' invXtX <- fMatInv(XtX)
-//' invXtXy <- fMatSolve(XtX, y)
 //' fMatAdd(x, z) # x + z
 //' fMatSubtract(x, z) # x - z
 //' fMatSumDiffSquared(x, z) # sum((x-z)^2)
@@ -55,13 +53,6 @@ arma::mat fMatProd(const arma::mat & x, const arma::mat & y) {
 // [[Rcpp::export]]
 arma::mat fMatTransProd(const arma::mat & x, const arma::mat & y) {
   return x.t() * y;
-}
-
-//' @name fast_matrix_ops
-//' @export
-// [[Rcpp::export]]
-arma::mat fMatSolve(const arma::mat & x, const arma::mat & y) {
-  return arma::solve(x, y);
 }
 
 //' @param is_sym_pd Whether the input matrix is symmetric/Hermitian positive definite.

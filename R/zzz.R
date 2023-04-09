@@ -23,10 +23,10 @@ old_base_solve <- NULL
 .onAttach <- function(libname, pkgname) {
   # replace solve due to the broken issue
   old_base_solve <- base::solve
-  packageStartupMessage("Replace base::solve with oneMKLUtil::oneMKLUtilSolve.\n")
+  packageStartupMessage("Replace base::solve with fMatSolve due to the bug to import MKL routines.\n")
   rlang::env_unlock(env = asNamespace('base'))
   rlang::env_binding_unlock(env = asNamespace('base'))
-  assign('solve', oneMKLUtilSolve, envir = asNamespace('base'))
+  assign('solve', fMatSolve, envir = asNamespace('base'))
   rlang::env_binding_lock(env = asNamespace('base'))
   rlang::env_lock(asNamespace('base'))
 }

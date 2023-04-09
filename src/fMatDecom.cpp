@@ -19,8 +19,7 @@
 #include <RcppArmadillo.h>
 #include <string>
 
-// [[Rcpp::depends(oneMKL)]]
-// [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::depends(oneMKL, RcppArmadillo)]]
 
 //' Functions to do the decomposition by leveraging Intel MKL
 //'

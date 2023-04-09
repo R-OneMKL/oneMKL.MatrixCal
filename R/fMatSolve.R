@@ -15,6 +15,25 @@
 ## You should have received a copy of the GNU General Public License
 ## along with oneMKLUtil. If not, see <http://www.gnu.org/licenses/>.
 
-oneMKLUtilSolve <- function(a, b, tol, LINPACK = FALSE, ...) {
-  return(b)
+#' @export
+fMatSolve <- function(a, b, tol = .Machine$double.eps, LINPACK = FALSE, ...) {
+  if(is.complex(a) || (!missing(b) && is.complex(b))) {
+    a <- as.matrix(a)
+    if (missing(b)) {
+      b <- diag(1.0+0.0i, nrow(a))
+    }
+    return(mkl_cmpl_solve(a, as.matrix(b)))
+  }
+
+  if (is.qr(a)) {
+    warning("solve.default called with a \"qr\" object: use 'qr.solve'")
+    return(solve.qr(a, b, tol))
+  }
+
+  a <- as.matrix(a)
+  if (missing(b)) {
+    b <- diag(1.0, nrow(a))
+  }
+
+  return(mkl_real_solve(a, as.matrix(b), tol))
 }

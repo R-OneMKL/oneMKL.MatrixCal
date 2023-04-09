@@ -85,7 +85,6 @@ fMatQr <- function(x, permutation_matrix = FALSE, economical = FALSE) {
 #' XtX2 <- fMatTransProd(x, x)
 #' all.equal(XtX, XtX2) # TRUE
 #' invXtX <- fMatInv(XtX)
-#' invXtXy <- fMatSolve(XtX, y)
 #' fMatAdd(x, z) # x + z
 #' fMatSubtract(x, z) # x - z
 #' fMatSumDiffSquared(x, z) # sum((x-z)^2)
@@ -103,12 +102,6 @@ fMatProd <- function(x, y) {
 #' @export
 fMatTransProd <- function(x, y) {
     .Call('_oneMKLUtil_fMatTransProd', PACKAGE = 'oneMKLUtil', x, y)
-}
-
-#' @name fast_matrix_ops
-#' @export
-fMatSolve <- function(x, y) {
-    .Call('_oneMKLUtil_fMatSolve', PACKAGE = 'oneMKLUtil', x, y)
 }
 
 #' @param is_sym_pd Whether the input matrix is symmetric/Hermitian positive definite.
@@ -149,12 +142,12 @@ fMatDet <- function(x) {
     .Call('_oneMKLUtil_fMatDet', PACKAGE = 'oneMKLUtil', x)
 }
 
-mkl_real_solve <- function(x, b) {
-    .Call('_oneMKLUtil_mkl_real_solve', PACKAGE = 'oneMKLUtil', x, b)
+mkl_real_solve <- function(a, b, tol) {
+    .Call('_oneMKLUtil_mkl_real_solve', PACKAGE = 'oneMKLUtil', a, b, tol)
 }
 
-mkl_cmpl_solve <- function(x, b) {
-    .Call('_oneMKLUtil_mkl_cmpl_solve', PACKAGE = 'oneMKLUtil', x, b)
+mkl_cmpl_solve <- function(a, b) {
+    .Call('_oneMKLUtil_mkl_cmpl_solve', PACKAGE = 'oneMKLUtil', a, b)
 }
 
 #' Function to get the version of Intel MKL

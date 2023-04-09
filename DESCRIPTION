@@ -28,7 +28,7 @@ Description: The `oneMKLUtil` package provide some utiliy functions based on `on
 Depends: R (>= 4.2.0)
 Imports: utils, Rcpp (>= 1.0.0), roxygen2, pkgKitten (>= 0.1.2)
 Suggests: RUnit
-LinkingTo: Rcpp, RcppArmadillo, oneMKL
+LinkingTo: Rcpp, oneMKL, RcppArmadillo
 License: GPL-3
 URL: https://github.com/R-OneMKL/oneMKLUtil
 BugReports: https://github.com/R-OneMKL/oneMKLUtil/issues

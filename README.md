@@ -16,6 +16,11 @@ install.packages('remotes')
 remotes::install_github("R-OneMKL/oneMKLUtil")
 ```
 
+### Notice
+
+1. `solve` in vanilla R will be broken for solving inverse matrices (large size) after loading MKL in UNIX system. MKL uses INT64 ipiv in `dgesv`, but R uses INT32. Hence, it causes the issue. Therefore, we will replace `base::solve` with `fMatSolve` by employing `rlang` to avoid the incorrect results.
+
+
 ### License
 
 The `oneMKL` package is made available under the [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html) license.

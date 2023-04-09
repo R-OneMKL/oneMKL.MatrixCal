@@ -4,7 +4,6 @@
 \alias{fast_matrix_ops}
 \alias{fMatProd}
 \alias{fMatTransProd}
-\alias{fMatSolve}
 \alias{fMatInv}
 \alias{fMatPseudoInv}
 \alias{fMatAdd}
@@ -16,8 +15,6 @@
 fMatProd(x, y)
 
 fMatTransProd(x, y)
-
-fMatSolve(x, y)
 
 fMatInv(x, is_sym_pd = FALSE)
 
@@ -51,7 +48,6 @@ XtX <- fMatProd(t(x), x)
 XtX2 <- fMatTransProd(x, x)
 all.equal(XtX, XtX2) # TRUE
 invXtX <- fMatInv(XtX)
-invXtXy <- fMatSolve(XtX, y)
 fMatAdd(x, z) # x + z
 fMatSubtract(x, z) # x - z
 fMatSumDiffSquared(x, z) # sum((x-z)^2)
