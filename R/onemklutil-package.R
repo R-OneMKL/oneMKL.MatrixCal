@@ -23,4 +23,5 @@
 #' @name onemkl-package
 #' @useDynLib oneMKLUtil
 #' @importFrom Rcpp evalCpp
+#' @importFrom oneMKL onemklIncFlags onemklLibFlags
 NULL

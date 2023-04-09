@@ -26,7 +26,7 @@ Author:
 Maintainer: Ching-Chuan Chen <zw12356@gmail.com>
 Description: The `oneMKLUtil` package provide some utiliy functions based on `oneMKL` package.
 Depends: R (>= 4.2.0)
-Imports: utils, Rcpp (>= 1.0.0), roxygen2, pkgKitten (>= 0.1.2)
+Imports: utils, Rcpp (>= 1.0.0), oneMKL, rlang, roxygen2, pkgKitten (>= 0.1.2)
 Suggests: RUnit
 LinkingTo: Rcpp, oneMKL, RcppArmadillo
 License: GPL-3
