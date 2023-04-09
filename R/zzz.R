@@ -31,7 +31,7 @@ old_base_solve <- NULL
   rlang::env_lock(asNamespace('base'))
 }
 
-.onDetach <- function(libname, pkgname) {
+.onDetach <- function(libpath) {
   packageStartupMessage("Recover base::solve.\n")
   rlang::env_unlock(env = asNamespace('base'))
   rlang::env_binding_unlock(env = asNamespace('base'))
