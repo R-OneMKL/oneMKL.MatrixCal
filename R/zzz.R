@@ -17,7 +17,6 @@
 
 #' @importFrom rlang env_unlock env_binding_unlock env_binding_lock env_lock
 
-#' @export
 old_base_solve <- NULL
 
 .onAttach <- function(libname, pkgname) {

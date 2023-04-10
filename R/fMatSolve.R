@@ -15,6 +15,10 @@
 ## You should have received a copy of the GNU General Public License
 ## along with oneMKLUtil. If not, see <http://www.gnu.org/licenses/>.
 
+#' Replaced base::solve Function
+#'
+#' @param a,b,tol,LINPACK Please refer to \link[base]{solve}.
+#'
 #' @export
 fMatSolve <- function(a, b, tol = .Machine$double.eps, LINPACK = FALSE, ...) {
   if(is.complex(a) || (!missing(b) && is.complex(b))) {

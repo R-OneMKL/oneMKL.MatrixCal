@@ -20,8 +20,9 @@ The number of threads.
 Function to get/set the number of threads used in Intel MKL
 }
 \examples{
+getMKLThreads() # Default is the number of CPUs cores on your PC
+
 \dontrun{
-getMKLThreads() # Default is the number of cores your CPU has
 setMKLThreads(1)
 getMKLThreads() # 1
 }
