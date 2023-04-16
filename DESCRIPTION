@@ -1,8 +1,13 @@
 Package: oneMKLUtil
 Type: Package
-Title: Utility Functions Based on OneMKL
+Title: Matrix Operations Functions Based on OneMKL
 Version: 0.1.2022
 Authors@R: c(
+    person(given = "Ching-Chuan",
+           family = "Chen",
+           role = c("aut", "cre"),
+           email = "zw12356@gmail.com",
+           comment = c(ORCID = '0009-0007-8273-3206')),
     person(given = "Pei-Shan",
            family = "Yen", 
            email = "peishan0824@gmail.com",
@@ -12,26 +17,23 @@ Authors@R: c(
            family = "Kuo",
            email = "phxiranter@gmail.com",
            role = c("aut"),
-           comment = c(ORCID = '0000-0002-6096-5184')),
-    person(given = "Ching-Chuan",
-           family = "Chen",
-           role = c("aut", "cre"),
-           email = "zw12356@gmail.com",
-           comment = c(ORCID = '0009-0007-8273-3206'))
+           comment = c(ORCID = '0000-0002-6096-5184'))
     )
 Author: 
+  Ching-Chuan Chen [aut, cre] (<https://orcid.org/0009-0007-8273-3206>),
   Pei-Shan Yen [aut] (<https://orcid.org/0000-0001-7386-0552>), 
-  Chia-Wei Kuo [aut] (<https://orcid.org/0000-0002-6096-5184>), 
-  Ching-Chuan Chen [aut, cre] (<https://orcid.org/0009-0007-8273-3206>)
+  Chia-Wei Kuo [aut] (<https://orcid.org/0000-0002-6096-5184>)
+ 
 Maintainer: Ching-Chuan Chen <zw12356@gmail.com>
-Description: The `oneMKLUtil` package provide some utiliy functions based on `oneMKL` package.
+Description: The "oneMKL.MatrixCal" package provides an efficient and powerful tool for conducting linear algebra computations in the R environment. It achieves this by utilizing the optimized algorithms embedded in the Intel® oneAPI Math Kernel Library (oneMKL) to accelerate matrix operations, such as factorization, inversion, and multiplication. To ensure proper installation, users must first install the "oneMKL" package to establish the connection between R and oneMKL. 
+The package also supports multithreaded computations, enabling users to utilize multiple CPU cores for faster and more accurate performance on large-scale matrix computations. Its compatibility with Windows and Linux operating systems makes it a versatile option for many users.
 Depends: R (>= 4.2.0)
 Imports: Rcpp (>= 1.0.0), oneMKL, rlang
 Suggests: RUnit
 LinkingTo: Rcpp, oneMKL, RcppArmadillo
 SystemRequirements: GNU make
 License: GPL-3
-URL: https://github.com/R-OneMKL/oneMKLUtil
-BugReports: https://github.com/R-OneMKL/oneMKLUtil/issues
+URL: https://github.com/R-OneMKL/oneMKL.MatrixCal
+BugReports: https://github.com/R-OneMKL/oneMKL.MatrixCal/issues
 Encoding: UTF-8
 RoxygenNote: 7.2.3
