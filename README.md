@@ -23,7 +23,7 @@ Or, to get this package from github:
 
 ```r
 # install.packages('remotes')
-remotes::install_github("R-OneMKL/oneMKL") # users must first install the "oneMKL" package to construct the connect between R and oneMKL
+remotes::install_github("R-OneMKL/oneMKL") # users must first install the "oneMKL" package to construct the connection between R and oneMKL
 remotes::install_github("R-OneMKL/oneMKL.MatrixCal")
 ```
 
