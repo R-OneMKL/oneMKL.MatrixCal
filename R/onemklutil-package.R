@@ -15,13 +15,13 @@
 ## You should have received a copy of the GNU General Public License
 ## along with oneMKL. If not, see <http://www.gnu.org/licenses/>.
 
-#' `oneMKLUtil` Package
+#' `oneMKL.MatrixCal` Package
 #'
-#' The `oneMKLUtil` package provide some utiliy functions based on `oneMKL` package.
+#' The `oneMKL.MatrixCal` package provide matrix operation functions based on Intel® oneAPI Math Kernel Library (oneMKL).
 #'
 #' @docType package
 #' @name onemkl-package
-#' @useDynLib oneMKLUtil
+#' @useDynLib oneMKL.MatrixCal
 #' @importFrom Rcpp evalCpp
 #' @importFrom oneMKL onemklIncFlags onemklLibFlags
 NULL
