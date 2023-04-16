@@ -23,7 +23,6 @@ Author:
   Ching-Chuan Chen [aut, cre] (<https://orcid.org/0009-0007-8273-3206>),
   Pei-Shan Yen [aut] (<https://orcid.org/0000-0001-7386-0552>), 
   Chia-Wei Kuo [aut] (<https://orcid.org/0000-0002-6096-5184>)
- 
 Maintainer: Ching-Chuan Chen <zw12356@gmail.com>
 Description: The "oneMKL.MatrixCal" package provides an efficient and powerful tool for 
   conducting linear algebra computations in the R environment. It achieves this by 
