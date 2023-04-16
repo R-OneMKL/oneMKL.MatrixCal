@@ -29,7 +29,7 @@ remotes::install_github("R-OneMKL/oneMKL.MatrixCal")
 
 ### Notice
 
-1. The function `solve` in vanilla R will be broken for solving inverse matrices (large size) after loading MKL in the UNIX system. MKL uses INT64 ipiv in `dgesv`, but R uses INT32. Hence, it causes the issue. Therefore, we will replace `base::solve` with `fMatSolve` by employing `rlang` to avoid incorrect results.
+`solve` in vanilla R will be broken for solving inverse matrices (large size) after loading MKL in the UNIX system. MKL uses INT64 ipiv in `dgesv`, but R uses INT32. Hence, it causes the issue. Therefore, we will replace `base::solve` with `fMatSolve` by employing `rlang` to avoid incorrect results.
 
 
 ### License
