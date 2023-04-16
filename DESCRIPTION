@@ -30,9 +30,9 @@ Description: The "oneMKL.MatrixCal" package provides an efficient and powerful t
   (oneMKL) to accelerate matrix operations, such as factorization, inversion, and 
   multiplication. To ensure proper installation, users must first install the "oneMKL" 
   package to establish the connection between R and Intel oneMKL. The package also supports 
-  multithreaded computations, enabling users to utilize multiple CPU cores for faster 
-  and more accurate performance on large-scale matrix computations. Its compatibility 
-  with Windows and Linux operating systems makes it a versatile option for many users.
+  multithreaded computations, enabling users to utilize multiple CPU cores for a faster 
+  performance on large-scale matrix computations. Its compatibility with Windows and 
+  Linux operating systems makes it a versatile option for many users.
 Depends: R (>= 4.2.0)
 Imports: Rcpp (>= 1.0.0), oneMKL, rlang
 Suggests: RUnit
