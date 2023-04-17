@@ -17,7 +17,7 @@
 
 require(Rcpp)
 require(Matrix)
-pkg <- "oneMKL"
+pkg <- "oneMKL.MatrixCal"
 
 if (require("RUnit", quietly = TRUE)) {
 

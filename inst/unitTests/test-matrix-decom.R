@@ -14,7 +14,7 @@ testMatSvd <- function() {
   checkEquals(t(s$u[ , 1:6]) %*% X %*% s$v, D)
 }
 
-checkMatEigen <- function() {
+testMatEigen <- function() {
   X <- cbind(c(1,-1), c(-1,1))
   eigenResVanillaR <- eigen(X)
   eigenRes1 <- fMatEigen(X, TRUE)
@@ -37,7 +37,7 @@ checkMatEigen <- function() {
   checkTrue(all.equal(matrix(1, 2, 2) - diag(1, 2, 2), Z2) || all.equal(Z2, diag(1, 2, 2)))
 }
 
-checkOtherDecom <- function() {
+testOtherDecom <- function() {
   # fMatLu
   X <- matrix(rnorm(9), 3, 3)
   luRes <- fMatLu(X, TRUE)

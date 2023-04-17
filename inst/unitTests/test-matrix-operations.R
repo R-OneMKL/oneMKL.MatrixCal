@@ -1,5 +1,5 @@
 library(oneMKL.MatrixCal)
-checkMatOps <- function() {
+testMatOps <- function() {
   x <- matrix(rnorm(3e4), 300)
   z <- matrix(rnorm(3e4), 300)
 
@@ -19,7 +19,7 @@ checkMatOps <- function() {
   checkEquals(fMatSumDiffSquared(x, z), sum((x-z)^2))
 }
 
-checkMatInverse <- function() {
+testMatInverse <- function() {
   x <- matrix(rnorm(3e4), 300, 100)
   y <- fMatTransProd(x, matrix(rnorm(3e2), 300)) + rnorm(100)
   XtX <- fMatTransProd(x, x)
