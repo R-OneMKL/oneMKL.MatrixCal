@@ -27,8 +27,9 @@ checkMatInverse <- function() {
   # fMatSolve (linear model)
   checkEquals(solve(t(x) %*% x, y), fMatSolve(XtX, y))
 
-  # fMatInv
+  # fMatInv 2*2
   z <- matrix(c(4, 3, 3, 5), 2)
+  checkEquals(fMatInv(z), solve(z))
   checkEquals(fMatInv(z) %*% z, diag(1, 2))
   checkEquals(fMatInv(z, TRUE) %*% z, diag(1, 2))
 
