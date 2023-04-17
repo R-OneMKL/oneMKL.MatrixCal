@@ -34,9 +34,9 @@ Description: The "oneMKL.MatrixCal" package provides an efficient and powerful t
   performance on large-scale matrix computations. Its compatibility with Windows and 
   Linux operating systems makes it a versatile option for many users.
 Depends: R (>= 4.2.0)
-Imports: Rcpp (>= 1.0.0), oneMKL, rlang
+Imports: Rcpp (>= 1.0.0), oneMKL, RcppArmadillo, rlang
 Suggests: RUnit
-LinkingTo: Rcpp, RcppArmadillo, oneMKL
+LinkingTo: Rcpp, oneMKL, RcppArmadillo
 SystemRequirements: GNU make
 License: GPL-3
 URL: https://github.com/R-OneMKL/oneMKL.MatrixCal

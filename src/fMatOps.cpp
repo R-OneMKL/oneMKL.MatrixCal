@@ -2,9 +2,9 @@
 //
 // This file is part of oneMKL.
 //
-// oneMKL.MatrixCal is free software: you can redistribute it and/or 
-// modify it under the terms of the GNU General Public License as 
-// published by the Free Software Foundation, either version 2 of 
+// oneMKL.MatrixCal is free software: you can redistribute it and/or
+// modify it under the terms of the GNU General Public License as
+// published by the Free Software Foundation, either version 2 of
 // the License, or (at your option) any later version.
 //
 // oneMKL.MatrixCal is distributed in the hope that it will be useful, but
@@ -16,10 +16,9 @@
 // along with oneMKL. If not, see <http://www.gnu.org/licenses/>.
 
 #include <oneMKL.h>
-#include <RcppArmadillo.h>
 #include <string>
 
-// [[Rcpp::depends(oneMKL, RcppArmadillo)]]
+// [[Rcpp::depends(oneMKL)]]
 
 //' Functions to use MKL to do the matrix calculations
 //'
@@ -55,8 +54,23 @@ arma::mat fMatTransProd(const arma::mat & x, const arma::mat & y) {
   return x.t() * y;
 }
 
+//' @param fast specify whether to enable fast mode to solve the linear model which will
+//'   disable determining solution quality via rcond, disable iterative refinement, disable equilibration.
 //' @param is_sym_pd Whether the input matrix is symmetric/Hermitian positive definite.
 //'   If the matrix is symmetric/Hermitian positive definite, enable this will be faster.
+//' @name fast_matrix_ops
+//' @export
+// [[Rcpp::export]]
+arma::mat fMatSolve(const arma::mat & x, const arma::mat & y, bool fast = false, bool is_sym_pd = false) {
+  if (fast) {
+    return arma::solve(x, y, arma::solve_opts::fast);
+  } else if (is_sym_pd) {
+    return arma::solve(x, y, arma::solve_opts::likely_sympd);
+  } else {
+    return arma::solve(x, y);
+  }
+}
+
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]

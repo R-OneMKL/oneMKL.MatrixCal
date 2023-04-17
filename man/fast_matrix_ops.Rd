@@ -4,6 +4,7 @@
 \alias{fast_matrix_ops}
 \alias{fMatProd}
 \alias{fMatTransProd}
+\alias{fMatSolve}
 \alias{fMatInv}
 \alias{fMatPseudoInv}
 \alias{fMatAdd}
@@ -15,6 +16,8 @@
 fMatProd(x, y)
 
 fMatTransProd(x, y)
+
+fMatSolve(x, y, fast = FALSE, is_sym_pd = FALSE)
 
 fMatInv(x, is_sym_pd = FALSE)
 
@@ -30,6 +33,9 @@ fMatDet(x)
 }
 \arguments{
 \item{x, y}{matrices}
+
+\item{fast}{specify whether to enable fast mode to solve the linear model which will
+disable determining solution quality via rcond, disable iterative refinement, disable equilibration.}
 
 \item{is_sym_pd}{Whether the input matrix is symmetric/Hermitian positive definite.
 If the matrix is symmetric/Hermitian positive definite, enable this will be faster.}

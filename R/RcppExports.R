@@ -104,8 +104,16 @@ fMatTransProd <- function(x, y) {
     .Call('_oneMKL_MatrixCal_fMatTransProd', PACKAGE = 'oneMKL.MatrixCal', x, y)
 }
 
+#' @param fast specify whether to enable fast mode to solve the linear model which will
+#'   disable determining solution quality via rcond, disable iterative refinement, disable equilibration.
 #' @param is_sym_pd Whether the input matrix is symmetric/Hermitian positive definite.
 #'   If the matrix is symmetric/Hermitian positive definite, enable this will be faster.
+#' @name fast_matrix_ops
+#' @export
+fMatSolve <- function(x, y, fast = FALSE, is_sym_pd = FALSE) {
+    .Call('_oneMKL_MatrixCal_fMatSolve', PACKAGE = 'oneMKL.MatrixCal', x, y, fast, is_sym_pd)
+}
+
 #' @name fast_matrix_ops
 #' @export
 fMatInv <- function(x, is_sym_pd = FALSE) {
@@ -140,14 +148,6 @@ fMatSumDiffSquared <- function(x, y) {
 #' @export
 fMatDet <- function(x) {
     .Call('_oneMKL_MatrixCal_fMatDet', PACKAGE = 'oneMKL.MatrixCal', x)
-}
-
-mkl_real_solve <- function(a, b, tol) {
-    .Call('_oneMKL_MatrixCal_mkl_real_solve', PACKAGE = 'oneMKL.MatrixCal', a, b, tol)
-}
-
-mkl_cmpl_solve <- function(a, b) {
-    .Call('_oneMKL_MatrixCal_mkl_cmpl_solve', PACKAGE = 'oneMKL.MatrixCal', a, b)
 }
 
 #' Function to get the version of Intel MKL
