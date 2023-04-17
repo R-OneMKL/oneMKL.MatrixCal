@@ -1,6 +1,14 @@
 ## oneMKL.MatrixCal
 
-The `oneMKL.MatrixCal` package provide matrix operation functions based on Intel® oneAPI Math Kernel Library (oneMKL).
+The `oneMKL.MatrixCal` package provides an efficient and powerful tool for 
+conducting linear algebra computations in the R environment. It achieves this by 
+utilizing the optimized algorithms embedded in the **Intel oneAPI Math Kernel Library** 
+(`oneMKL`) to accelerate matrix operations, such as factorization, inversion, and 
+multiplication. To ensure proper installation, users must first install the `oneMKL` 
+package to establish the connection between R and Intel `oneMKL`. The package also supports 
+multithreaded computations, enabling users to utilize multiple CPU cores for a faster 
+performance on large-scale matrix computations. Its compatibility with Windows and 
+Linux operating systems makes it a versatile option for many users.
 
 ### Installation
 
@@ -9,7 +17,7 @@ The `oneMKL.MatrixCal` package provide matrix operation functions based on Intel
 2. You can install this package through our `drat` repository:
 
 ```r
-# for Windows users
+# for Windows users (Because we don't provide the binary package of oneMKL)
 install.packages(c("oneMKL"), repos="https://R-OneMKL.github.io/drat", type="source")
 install.packages(c("oneMKL.MatrixCal"), repos="https://R-OneMKL.github.io/drat")
 

@@ -1,4 +1,4 @@
-library(oneMKL)
+library(oneMKL.MatrixCal)
 checkMatOps <- function() {
   x <- matrix(rnorm(3e4), 300)
   z <- matrix(rnorm(3e4), 300)

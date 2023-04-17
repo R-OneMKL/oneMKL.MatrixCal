@@ -1,4 +1,4 @@
-library(oneMKL)
+library(oneMKL.MatrixCal)
 testMatChol <- function() {
   m <- matrix(c(5,1,1,3),2,2)
   checkEquals(fMatChol(m), chol(m))

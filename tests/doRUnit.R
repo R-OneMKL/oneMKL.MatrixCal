@@ -1,5 +1,5 @@
 if (require("RUnit", quietly = TRUE)) {
-  pkg <- "oneMKL"
+  pkg <- "oneMKL.MatrixCal"
   require(pkg, character.only = TRUE)
   path <- system.file("unitTests", package = pkg)
   stopifnot(file.exists(path), file.info(path.expand(path))$isdir)
