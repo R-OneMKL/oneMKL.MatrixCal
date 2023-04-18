@@ -24,15 +24,17 @@ Author:
   Pei-Shan Yen [aut] (<https://orcid.org/0000-0001-7386-0552>), 
   Chia-Wei Kuo [aut] (<https://orcid.org/0000-0002-6096-5184>)
 Maintainer: Ching-Chuan Chen <zw12356@gmail.com>
-Description: The "oneMKL.MatrixCal" package provides an efficient and powerful tool for 
-  conducting linear algebra computations in the R environment. It achieves this by 
-  utilizing the optimized algorithms embedded in the Intel oneAPI Math Kernel Library 
-  (oneMKL) to accelerate matrix operations, such as factorization, inversion, and 
-  multiplication. To ensure proper installation, users must first install the "oneMKL" 
-  package to establish the connection between R and Intel oneMKL. The package also supports 
-  multithreaded computations, enabling users to utilize multiple CPU cores for a faster 
-  performance on large-scale matrix computations. Its compatibility with Windows and 
-  Linux operating systems makes it a versatile option for many users.
+Description: The "oneMKL.MatrixCal" package provides an efficient and powerful tool for
+  conducting linear algebra computations in the R environment. In the package, matrix 
+  operations, such as factorization, inversion, and multiplication, are performed using 
+  the optimized algorithms embedded in the **Intel oneAPI Math Kernel Library** (`oneMKL`). 
+  Because of this feature, the computational performance can be significantly improved. 
+  To make the package function correctly, users must first install the `oneMKL` package 
+  to establish the connection between R and Intel `oneMKL`. The package also supports 
+  multithreaded computations, enabling users to utilize the benefit of multiple CPU cores, 
+  i.e., parallel computing, to handle large-scale matrix computations. The package is not 
+  only compatible with Linux but aslo Windows operating systems, which can benefit a wide 
+  range of users. 
 Depends: R (>= 4.2.0)
 Imports: Rcpp (>= 1.0.0), oneMKL, RcppArmadillo
 Suggests: RUnit
