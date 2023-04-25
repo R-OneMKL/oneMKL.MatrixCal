@@ -22,11 +22,11 @@ which can benefit a wide range of users.
 
 ```r
 # for Windows users (Because we don't provide the binary package of oneMKL)
-install.packages(c("oneMKL"), repos="https://R-OneMKL.github.io/drat", type="source")
-install.packages(c("oneMKL.MatrixCal"), repos="https://R-OneMKL.github.io/drat")
+install.packages(c("oneMKL"), repos=c("https://cloud.r-project.org/", "https://R-OneMKL.github.io/drat"), type="source")
+install.packages(c("oneMKL.MatrixCal"), repos=c("https://cloud.r-project.org/", "https://R-OneMKL.github.io/drat"))
 
 # for Linux users
-install.packages(c("oneMKL", "oneMKL.MatrixCal"), repos="https://R-OneMKL.github.io/drat")
+install.packages(c("oneMKL", "oneMKL.MatrixCal"), repos=c("https://cloud.r-project.org/", "https://R-OneMKL.github.io/drat"))
 ```
 
 Or, to get this package from github:
