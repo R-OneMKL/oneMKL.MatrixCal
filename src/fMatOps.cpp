@@ -61,7 +61,7 @@ arma::mat fMatTransProd(const arma::mat & x, const arma::mat & y) {
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-arma::mat fMatSolve(const arma::mat & x, const arma::mat & y, bool= false, bool is_sym_pd = false) {
+arma::mat fMatSolve(const arma::mat & x, const arma::mat & y, bool fast= false, bool is_sym_pd = false) {
   if (fast) {
     return arma::solve(x, y, arma::solve_opts::fast);
   } else if (is_sym_pd) {

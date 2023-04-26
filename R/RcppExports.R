@@ -72,7 +72,7 @@ fMatQr <- function(x, permutation_matrix = FALSE, economical = FALSE) {
     .Call('_oneMKL_MatrixCal_fMatQr', PACKAGE = 'oneMKL.MatrixCal', x, permutation_matrix, economical)
 }
 
-#' Functions to use MKL to do the matrix calculations
+#' Functions that use oneMKL for fast matrix calculations
 #'
 #' @param x,y matrices
 #' @return The result matrices
@@ -104,10 +104,10 @@ fMatTransProd <- function(x, y) {
     .Call('_oneMKL_MatrixCal_fMatTransProd', PACKAGE = 'oneMKL.MatrixCal', x, y)
 }
 
-#' @param fast specify whether to enable fast mode to solve the linear model which will
-#'   disable determining solution quality via rcond, disable iterative refinement, disable equilibration.
-#' @param is_sym_pd Whether the input matrix is symmetric/Hermitian positive definite.
-#'   If the matrix is symmetric/Hermitian positive definite, enable this will be faster.
+#' @param fast specify whether to enable faster computation of the linear model solution
+#'   by disabling the use of rcond, iterative refinement, and equilibration.
+#' @param is_sym_pd specific whether the input matrix is symmetric/Hermitian positive definite.
+#'   Enabling this option can result in faster computation if the matrix satisfies these properties.
 #' @name fast_matrix_ops
 #' @export
 fMatSolve <- function(x, y, fast = FALSE, is_sym_pd = FALSE) {
