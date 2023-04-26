@@ -11,7 +11,7 @@
 \alias{fMatSubtract}
 \alias{fMatSumDiffSquared}
 \alias{fMatDet}
-\title{Functions to use MKL to do the matrix calculations}
+\title{Functions that use oneMKL for fast matrix calculations}
 \usage{
 fMatProd(x, y)
 
@@ -34,17 +34,17 @@ fMatDet(x)
 \arguments{
 \item{x, y}{matrices}
 
-\item{fast}{specify whether to enable fast mode to solve the linear model which will
-disable determining solution quality via rcond, disable iterative refinement, disable equilibration.}
+\item{fast}{specify whether to enable faster computation of the linear model solution
+by disabling the use of rcond, iterative refinement, and equilibration.}
 
-\item{is_sym_pd}{Whether the input matrix is symmetric/Hermitian positive definite.
-If the matrix is symmetric/Hermitian positive definite, enable this will be faster.}
+\item{is_sym_pd}{specific whether the input matrix is symmetric/Hermitian positive definite.
+Enabling this option can result in faster computation if the matrix satisfies these properties.}
 }
 \value{
 The result matrices
 }
 \description{
-Functions to use MKL to do the matrix calculations
+Functions that use oneMKL for fast matrix calculations
 }
 \examples{
 x <- matrix(rnorm(1e4), 100)
