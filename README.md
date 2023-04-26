@@ -2,7 +2,7 @@
 
 The `oneMKL.MatrixCal` package provides an efficient and powerful tool for
 conducting linear algebra computations in the R environment. In the package,
-matrix operations, such as factorization, inversion, and multiplication,
+matrix operations, such as decomposition, inversion, and multiplication,
 are performed using the optimized algorithms embedded in the
 **Intel oneAPI Math Kernel Library** (`oneMKL`). Because of this feature,
 the computational performance can be significantly improved. To make the package
