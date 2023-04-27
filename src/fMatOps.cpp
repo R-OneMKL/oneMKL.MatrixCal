@@ -78,7 +78,7 @@ Eigen::MatrixXd fMatSolve(
   } else if (is_invertible) {
     return X.partialPivLu().solve(Y);
   } else {
-    return X.fullPivLu().solve(Y);
+    return X.householderQr().solve(Y);
   }
 }
 
