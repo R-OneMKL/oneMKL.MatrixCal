@@ -3,8 +3,7 @@
 
 #' Functions to do the decomposition by leveraging Intel MKL
 #'
-#' @param x A matrix to perform decomposition.
-#' @param upper A Boolean value to indicate the output matrix is a upper matrix. False will return a lower matrix.
+#' @param X A matrix to perform decomposition.
 #' @rdname fast_matrix_decomposition
 #' @name fast_matrix_decomposition
 #' @examples
@@ -35,46 +34,13 @@
 #' qrRes <- fMatQr(X)
 #' qrRes$Q %*% qrRes$R # X = Q R
 #' @export
-fMatChol <- function(x, upper = TRUE) {
-    .Call('_oneMKL_MatrixCal_fMatChol', PACKAGE = 'oneMKL.MatrixCal', x, upper)
-}
-
-#' @param economical Whether to use economical SVD.
-#' @name fast_matrix_decomposition
-#' @export
-fMatSvd <- function(x, economical = FALSE) {
-    .Call('_oneMKL_MatrixCal_fMatSvd', PACKAGE = 'oneMKL.MatrixCal', x, economical)
-}
-
-#' @param is_symmetric Whether the matrix is symmetric.
-#' @name fast_matrix_decomposition
-#' @export
-fMatEigen <- function(x, is_symmetric = FALSE) {
-    .Call('_oneMKL_MatrixCal_fMatEigen', PACKAGE = 'oneMKL.MatrixCal', x, is_symmetric)
-}
-
-#' @param permutation_matrix Whether the permutation matrix is outputted.
-#' @name fast_matrix_decomposition
-#' @export
-fMatLu <- function(x, permutation_matrix = FALSE) {
-    .Call('_oneMKL_MatrixCal_fMatLu', PACKAGE = 'oneMKL.MatrixCal', x, permutation_matrix)
-}
-
-#' @name fast_matrix_decomposition
-#' @export
-fMatSchur <- function(x) {
-    .Call('_oneMKL_MatrixCal_fMatSchur', PACKAGE = 'oneMKL.MatrixCal', x)
-}
-
-#' @name fast_matrix_decomposition
-#' @export
-fMatQr <- function(x, permutation_matrix = FALSE, economical = FALSE) {
-    .Call('_oneMKL_MatrixCal_fMatQr', PACKAGE = 'oneMKL.MatrixCal', x, permutation_matrix, economical)
+fMatChol <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatChol', PACKAGE = 'oneMKL.MatrixCal', X)
 }
 
 #' Functions that use oneMKL for fast matrix calculations
 #'
-#' @param x,y matrices
+#' @param X,Y matrices
 #' @return The result matrices
 #'
 #' @examples
@@ -87,67 +53,92 @@ fMatQr <- function(x, permutation_matrix = FALSE, economical = FALSE) {
 #' invXtX <- fMatInv(XtX)
 #' fMatAdd(x, z) # x + z
 #' fMatSubtract(x, z) # x - z
-#' fMatSumDiffSquared(x, z) # sum((x-z)^2)
-#'
-#' A <- matrix(c(7,6,4,8,10,11,12,9,3,5,1,2), 3, 4)
-#' A %*% fMatPseudoInv(A) # => very close to identity matrix
+#' fMatRowSum(x) # rowSums(x)
+#' fMatRowMin(x) # apply(x, 1, min)
+#' fMatRowMax(x) # apply(x, 1, max)
+#' fMatColMin(x) # apply(x, 2, min)
+#' fMatColMax(x) # apply(x, 2, max)
 #' @rdname fast_matrix_ops
 #' @name fast_matrix_ops
 #' @export
-fMatProd <- function(x, y) {
-    .Call('_oneMKL_MatrixCal_fMatProd', PACKAGE = 'oneMKL.MatrixCal', x, y)
+fMatProd <- function(X, Y) {
+    .Call('_oneMKL_MatrixCal_fMatProd', PACKAGE = 'oneMKL.MatrixCal', X, Y)
 }
 
 #' @name fast_matrix_ops
 #' @export
-fMatTransProd <- function(x, y) {
-    .Call('_oneMKL_MatrixCal_fMatTransProd', PACKAGE = 'oneMKL.MatrixCal', x, y)
+fMatTransProd <- function(X, Y) {
+    .Call('_oneMKL_MatrixCal_fMatTransProd', PACKAGE = 'oneMKL.MatrixCal', X, Y)
 }
 
-#' @param fast specify whether to enable faster computation of the linear model solution
+#' @param is_invertible specify whether to enable faster computation of the linear model solution
 #'   by disabling the use of rcond, iterative refinement, and equilibration.
 #' @param is_sym_pd specific whether the input matrix is symmetric/Hermitian positive definite.
 #'   Enabling this option can result in faster computation if the matrix satisfies these properties.
 #' @name fast_matrix_ops
 #' @export
-fMatSolve <- function(x, y, fast = FALSE, is_sym_pd = FALSE) {
-    .Call('_oneMKL_MatrixCal_fMatSolve', PACKAGE = 'oneMKL.MatrixCal', x, y, fast, is_sym_pd)
+fMatSolve <- function(X, Y, is_sym_pd = FALSE, is_invertible = FALSE) {
+    .Call('_oneMKL_MatrixCal_fMatSolve', PACKAGE = 'oneMKL.MatrixCal', X, Y, is_sym_pd, is_invertible)
 }
 
 #' @name fast_matrix_ops
 #' @export
-fMatInv <- function(x, is_sym_pd = FALSE) {
-    .Call('_oneMKL_MatrixCal_fMatInv', PACKAGE = 'oneMKL.MatrixCal', x, is_sym_pd)
+fMatInv <- function(X, is_sym_pd = FALSE) {
+    .Call('_oneMKL_MatrixCal_fMatInv', PACKAGE = 'oneMKL.MatrixCal', X, is_sym_pd)
 }
 
 #' @name fast_matrix_ops
 #' @export
-fMatPseudoInv <- function(x) {
-    .Call('_oneMKL_MatrixCal_fMatPseudoInv', PACKAGE = 'oneMKL.MatrixCal', x)
+fMatAdd <- function(X, Y) {
+    .Call('_oneMKL_MatrixCal_fMatAdd', PACKAGE = 'oneMKL.MatrixCal', X, Y)
 }
 
 #' @name fast_matrix_ops
 #' @export
-fMatAdd <- function(x, y) {
-    .Call('_oneMKL_MatrixCal_fMatAdd', PACKAGE = 'oneMKL.MatrixCal', x, y)
+fMatSubtract <- function(X, Y) {
+    .Call('_oneMKL_MatrixCal_fMatSubtract', PACKAGE = 'oneMKL.MatrixCal', X, Y)
 }
 
 #' @name fast_matrix_ops
 #' @export
-fMatSubtract <- function(x, y) {
-    .Call('_oneMKL_MatrixCal_fMatSubtract', PACKAGE = 'oneMKL.MatrixCal', x, y)
+fMatRowSum <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatRowSum', PACKAGE = 'oneMKL.MatrixCal', X)
 }
 
 #' @name fast_matrix_ops
 #' @export
-fMatSumDiffSquared <- function(x, y) {
-    .Call('_oneMKL_MatrixCal_fMatSumDiffSquared', PACKAGE = 'oneMKL.MatrixCal', x, y)
+fMatColSum <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatColSum', PACKAGE = 'oneMKL.MatrixCal', X)
 }
 
 #' @name fast_matrix_ops
 #' @export
-fMatDet <- function(x) {
-    .Call('_oneMKL_MatrixCal_fMatDet', PACKAGE = 'oneMKL.MatrixCal', x)
+fMatRowMin <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatRowMin', PACKAGE = 'oneMKL.MatrixCal', X)
+}
+
+#' @name fast_matrix_ops
+#' @export
+fMatColMin <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatColMin', PACKAGE = 'oneMKL.MatrixCal', X)
+}
+
+#' @name fast_matrix_ops
+#' @export
+fMatRowMax <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatRowMax', PACKAGE = 'oneMKL.MatrixCal', X)
+}
+
+#' @name fast_matrix_ops
+#' @export
+fMatColMax <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatColMax', PACKAGE = 'oneMKL.MatrixCal', X)
+}
+
+#' @name fast_matrix_ops
+#' @export
+fMatDet <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatDet', PACKAGE = 'oneMKL.MatrixCal', X)
 }
 
 #' Function to get the version of Intel MKL

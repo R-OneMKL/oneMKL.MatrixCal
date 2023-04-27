@@ -2,7 +2,7 @@
 // Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #include <oneMKL.h>
-#include <RcppArmadillo.h>
+#include <RcppEigen.h>
 #include <Rcpp.h>
 
 using namespace Rcpp;
@@ -13,182 +13,164 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // fMatChol
-arma::mat fMatChol(const arma::mat& x, bool upper);
-RcppExport SEXP _oneMKL_MatrixCal_fMatChol(SEXP xSEXP, SEXP upperSEXP) {
+Eigen::MatrixXd fMatChol(const Eigen::Map<Eigen::MatrixXd> X);
+RcppExport SEXP _oneMKL_MatrixCal_fMatChol(SEXP XSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< bool >::type upper(upperSEXP);
-    rcpp_result_gen = Rcpp::wrap(fMatChol(x, upper));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fMatSvd
-Rcpp::List fMatSvd(const arma::mat& x, bool economical);
-RcppExport SEXP _oneMKL_MatrixCal_fMatSvd(SEXP xSEXP, SEXP economicalSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< bool >::type economical(economicalSEXP);
-    rcpp_result_gen = Rcpp::wrap(fMatSvd(x, economical));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fMatEigen
-Rcpp::List fMatEigen(const arma::mat& x, bool is_symmetric);
-RcppExport SEXP _oneMKL_MatrixCal_fMatEigen(SEXP xSEXP, SEXP is_symmetricSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< bool >::type is_symmetric(is_symmetricSEXP);
-    rcpp_result_gen = Rcpp::wrap(fMatEigen(x, is_symmetric));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fMatLu
-Rcpp::List fMatLu(const arma::mat& x, bool permutation_matrix);
-RcppExport SEXP _oneMKL_MatrixCal_fMatLu(SEXP xSEXP, SEXP permutation_matrixSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< bool >::type permutation_matrix(permutation_matrixSEXP);
-    rcpp_result_gen = Rcpp::wrap(fMatLu(x, permutation_matrix));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fMatSchur
-Rcpp::List fMatSchur(const arma::mat& x);
-RcppExport SEXP _oneMKL_MatrixCal_fMatSchur(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(fMatSchur(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fMatQr
-Rcpp::List fMatQr(const arma::mat& x, bool permutation_matrix, bool economical);
-RcppExport SEXP _oneMKL_MatrixCal_fMatQr(SEXP xSEXP, SEXP permutation_matrixSEXP, SEXP economicalSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< bool >::type permutation_matrix(permutation_matrixSEXP);
-    Rcpp::traits::input_parameter< bool >::type economical(economicalSEXP);
-    rcpp_result_gen = Rcpp::wrap(fMatQr(x, permutation_matrix, economical));
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatChol(X));
     return rcpp_result_gen;
 END_RCPP
 }
 // fMatProd
-arma::mat fMatProd(const arma::mat& x, const arma::mat& y);
-RcppExport SEXP _oneMKL_MatrixCal_fMatProd(SEXP xSEXP, SEXP ySEXP) {
+Eigen::MatrixXd fMatProd(const Eigen::Map<Eigen::MatrixXd> X, const Eigen::Map<Eigen::MatrixXd> Y);
+RcppExport SEXP _oneMKL_MatrixCal_fMatProd(SEXP XSEXP, SEXP YSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(fMatProd(x, y));
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type Y(YSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatProd(X, Y));
     return rcpp_result_gen;
 END_RCPP
 }
 // fMatTransProd
-arma::mat fMatTransProd(const arma::mat& x, const arma::mat& y);
-RcppExport SEXP _oneMKL_MatrixCal_fMatTransProd(SEXP xSEXP, SEXP ySEXP) {
+Eigen::MatrixXd fMatTransProd(const Eigen::Map<Eigen::MatrixXd> X, const Eigen::Map<Eigen::MatrixXd> Y);
+RcppExport SEXP _oneMKL_MatrixCal_fMatTransProd(SEXP XSEXP, SEXP YSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(fMatTransProd(x, y));
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type Y(YSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatTransProd(X, Y));
     return rcpp_result_gen;
 END_RCPP
 }
 // fMatSolve
-arma::mat fMatSolve(const arma::mat& x, const arma::mat& y, bool fast, bool is_sym_pd);
-RcppExport SEXP _oneMKL_MatrixCal_fMatSolve(SEXP xSEXP, SEXP ySEXP, SEXP fastSEXP, SEXP is_sym_pdSEXP) {
+Eigen::MatrixXd fMatSolve(const Eigen::Map<Eigen::MatrixXd> X, const Eigen::Map<Eigen::MatrixXd> Y, bool is_sym_pd, bool is_invertible);
+RcppExport SEXP _oneMKL_MatrixCal_fMatSolve(SEXP XSEXP, SEXP YSEXP, SEXP is_sym_pdSEXP, SEXP is_invertibleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< bool >::type fast(fastSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type Y(YSEXP);
     Rcpp::traits::input_parameter< bool >::type is_sym_pd(is_sym_pdSEXP);
-    rcpp_result_gen = Rcpp::wrap(fMatSolve(x, y, fast, is_sym_pd));
+    Rcpp::traits::input_parameter< bool >::type is_invertible(is_invertibleSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatSolve(X, Y, is_sym_pd, is_invertible));
     return rcpp_result_gen;
 END_RCPP
 }
 // fMatInv
-arma::mat fMatInv(const arma::mat& x, bool is_sym_pd);
-RcppExport SEXP _oneMKL_MatrixCal_fMatInv(SEXP xSEXP, SEXP is_sym_pdSEXP) {
+Eigen::MatrixXd fMatInv(const Eigen::Map<Eigen::MatrixXd> X, bool is_sym_pd);
+RcppExport SEXP _oneMKL_MatrixCal_fMatInv(SEXP XSEXP, SEXP is_sym_pdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
     Rcpp::traits::input_parameter< bool >::type is_sym_pd(is_sym_pdSEXP);
-    rcpp_result_gen = Rcpp::wrap(fMatInv(x, is_sym_pd));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fMatPseudoInv
-arma::mat fMatPseudoInv(const arma::mat& x);
-RcppExport SEXP _oneMKL_MatrixCal_fMatPseudoInv(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(fMatPseudoInv(x));
+    rcpp_result_gen = Rcpp::wrap(fMatInv(X, is_sym_pd));
     return rcpp_result_gen;
 END_RCPP
 }
 // fMatAdd
-arma::mat fMatAdd(const arma::mat& x, const arma::mat& y);
-RcppExport SEXP _oneMKL_MatrixCal_fMatAdd(SEXP xSEXP, SEXP ySEXP) {
+Eigen::MatrixXd fMatAdd(const Eigen::Map<Eigen::MatrixXd> X, const Eigen::Map<Eigen::MatrixXd> Y);
+RcppExport SEXP _oneMKL_MatrixCal_fMatAdd(SEXP XSEXP, SEXP YSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(fMatAdd(x, y));
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type Y(YSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatAdd(X, Y));
     return rcpp_result_gen;
 END_RCPP
 }
 // fMatSubtract
-arma::mat fMatSubtract(const arma::mat& x, const arma::mat& y);
-RcppExport SEXP _oneMKL_MatrixCal_fMatSubtract(SEXP xSEXP, SEXP ySEXP) {
+Eigen::MatrixXd fMatSubtract(const Eigen::Map<Eigen::MatrixXd> X, const Eigen::Map<Eigen::MatrixXd> Y);
+RcppExport SEXP _oneMKL_MatrixCal_fMatSubtract(SEXP XSEXP, SEXP YSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(fMatSubtract(x, y));
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type Y(YSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatSubtract(X, Y));
     return rcpp_result_gen;
 END_RCPP
 }
-// fMatSumDiffSquared
-double fMatSumDiffSquared(const arma::mat& x, const arma::mat& y);
-RcppExport SEXP _oneMKL_MatrixCal_fMatSumDiffSquared(SEXP xSEXP, SEXP ySEXP) {
+// fMatRowSum
+Eigen::MatrixXd fMatRowSum(const Eigen::Map<Eigen::MatrixXd> X);
+RcppExport SEXP _oneMKL_MatrixCal_fMatRowSum(SEXP XSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(fMatSumDiffSquared(x, y));
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatRowSum(X));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fMatColSum
+Eigen::MatrixXd fMatColSum(const Eigen::Map<Eigen::MatrixXd> X);
+RcppExport SEXP _oneMKL_MatrixCal_fMatColSum(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatColSum(X));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fMatRowMin
+Eigen::MatrixXd fMatRowMin(const Eigen::Map<Eigen::MatrixXd> X);
+RcppExport SEXP _oneMKL_MatrixCal_fMatRowMin(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatRowMin(X));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fMatColMin
+Eigen::MatrixXd fMatColMin(const Eigen::Map<Eigen::MatrixXd> X);
+RcppExport SEXP _oneMKL_MatrixCal_fMatColMin(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatColMin(X));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fMatRowMax
+Eigen::MatrixXd fMatRowMax(const Eigen::Map<Eigen::MatrixXd> X);
+RcppExport SEXP _oneMKL_MatrixCal_fMatRowMax(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatRowMax(X));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fMatColMax
+Eigen::MatrixXd fMatColMax(const Eigen::Map<Eigen::MatrixXd> X);
+RcppExport SEXP _oneMKL_MatrixCal_fMatColMax(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatColMax(X));
     return rcpp_result_gen;
 END_RCPP
 }
 // fMatDet
-double fMatDet(const arma::mat& x);
-RcppExport SEXP _oneMKL_MatrixCal_fMatDet(SEXP xSEXP) {
+double fMatDet(const Eigen::Map<Eigen::MatrixXd> X);
+RcppExport SEXP _oneMKL_MatrixCal_fMatDet(SEXP XSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(fMatDet(x));
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatDet(X));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -225,20 +207,19 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_oneMKL_MatrixCal_fMatChol", (DL_FUNC) &_oneMKL_MatrixCal_fMatChol, 2},
-    {"_oneMKL_MatrixCal_fMatSvd", (DL_FUNC) &_oneMKL_MatrixCal_fMatSvd, 2},
-    {"_oneMKL_MatrixCal_fMatEigen", (DL_FUNC) &_oneMKL_MatrixCal_fMatEigen, 2},
-    {"_oneMKL_MatrixCal_fMatLu", (DL_FUNC) &_oneMKL_MatrixCal_fMatLu, 2},
-    {"_oneMKL_MatrixCal_fMatSchur", (DL_FUNC) &_oneMKL_MatrixCal_fMatSchur, 1},
-    {"_oneMKL_MatrixCal_fMatQr", (DL_FUNC) &_oneMKL_MatrixCal_fMatQr, 3},
+    {"_oneMKL_MatrixCal_fMatChol", (DL_FUNC) &_oneMKL_MatrixCal_fMatChol, 1},
     {"_oneMKL_MatrixCal_fMatProd", (DL_FUNC) &_oneMKL_MatrixCal_fMatProd, 2},
     {"_oneMKL_MatrixCal_fMatTransProd", (DL_FUNC) &_oneMKL_MatrixCal_fMatTransProd, 2},
     {"_oneMKL_MatrixCal_fMatSolve", (DL_FUNC) &_oneMKL_MatrixCal_fMatSolve, 4},
     {"_oneMKL_MatrixCal_fMatInv", (DL_FUNC) &_oneMKL_MatrixCal_fMatInv, 2},
-    {"_oneMKL_MatrixCal_fMatPseudoInv", (DL_FUNC) &_oneMKL_MatrixCal_fMatPseudoInv, 1},
     {"_oneMKL_MatrixCal_fMatAdd", (DL_FUNC) &_oneMKL_MatrixCal_fMatAdd, 2},
     {"_oneMKL_MatrixCal_fMatSubtract", (DL_FUNC) &_oneMKL_MatrixCal_fMatSubtract, 2},
-    {"_oneMKL_MatrixCal_fMatSumDiffSquared", (DL_FUNC) &_oneMKL_MatrixCal_fMatSumDiffSquared, 2},
+    {"_oneMKL_MatrixCal_fMatRowSum", (DL_FUNC) &_oneMKL_MatrixCal_fMatRowSum, 1},
+    {"_oneMKL_MatrixCal_fMatColSum", (DL_FUNC) &_oneMKL_MatrixCal_fMatColSum, 1},
+    {"_oneMKL_MatrixCal_fMatRowMin", (DL_FUNC) &_oneMKL_MatrixCal_fMatRowMin, 1},
+    {"_oneMKL_MatrixCal_fMatColMin", (DL_FUNC) &_oneMKL_MatrixCal_fMatColMin, 1},
+    {"_oneMKL_MatrixCal_fMatRowMax", (DL_FUNC) &_oneMKL_MatrixCal_fMatRowMax, 1},
+    {"_oneMKL_MatrixCal_fMatColMax", (DL_FUNC) &_oneMKL_MatrixCal_fMatColMax, 1},
     {"_oneMKL_MatrixCal_fMatDet", (DL_FUNC) &_oneMKL_MatrixCal_fMatDet, 1},
     {"_oneMKL_MatrixCal_getMKLVersion", (DL_FUNC) &_oneMKL_MatrixCal_getMKLVersion, 0},
     {"_oneMKL_MatrixCal_setMKLThreads", (DL_FUNC) &_oneMKL_MatrixCal_setMKLThreads, 1},

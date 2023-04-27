@@ -3,35 +3,12 @@
 \name{fast_matrix_decomposition}
 \alias{fast_matrix_decomposition}
 \alias{fMatChol}
-\alias{fMatSvd}
-\alias{fMatEigen}
-\alias{fMatLu}
-\alias{fMatSchur}
-\alias{fMatQr}
 \title{Functions to do the decomposition by leveraging Intel MKL}
 \usage{
-fMatChol(x, upper = TRUE)
-
-fMatSvd(x, economical = FALSE)
-
-fMatEigen(x, is_symmetric = FALSE)
-
-fMatLu(x, permutation_matrix = FALSE)
-
-fMatSchur(x)
-
-fMatQr(x, permutation_matrix = FALSE, economical = FALSE)
+fMatChol(X)
 }
 \arguments{
-\item{x}{A matrix to perform decomposition.}
-
-\item{upper}{A Boolean value to indicate the output matrix is a upper matrix. False will return a lower matrix.}
-
-\item{economical}{Whether to use economical SVD.}
-
-\item{is_symmetric}{Whether the matrix is symmetric.}
-
-\item{permutation_matrix}{Whether the permutation matrix is outputted.}
+\item{X}{A matrix to perform decomposition.}
 }
 \description{
 Functions to do the decomposition by leveraging Intel MKL

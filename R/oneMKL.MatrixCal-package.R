@@ -34,6 +34,6 @@
 #' @name onemkl.MatrixCal-package
 #' @useDynLib oneMKL.MatrixCal
 #' @importFrom Rcpp evalCpp
-#' @importFrom RcppArmadillo armadillo_version
+#' @importFrom RcppEigen RcppEigen.package.skeleton
 #' @importFrom oneMKL onemklIncFlags onemklLibFlags
 NULL

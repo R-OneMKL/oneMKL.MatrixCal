@@ -6,39 +6,51 @@
 \alias{fMatTransProd}
 \alias{fMatSolve}
 \alias{fMatInv}
-\alias{fMatPseudoInv}
 \alias{fMatAdd}
 \alias{fMatSubtract}
-\alias{fMatSumDiffSquared}
+\alias{fMatRowSum}
+\alias{fMatColSum}
+\alias{fMatRowMin}
+\alias{fMatColMin}
+\alias{fMatRowMax}
+\alias{fMatColMax}
 \alias{fMatDet}
 \title{Functions that use oneMKL for fast matrix calculations}
 \usage{
-fMatProd(x, y)
+fMatProd(X, Y)
 
-fMatTransProd(x, y)
+fMatTransProd(X, Y)
 
-fMatSolve(x, y, fast = FALSE, is_sym_pd = FALSE)
+fMatSolve(X, Y, is_sym_pd = FALSE, is_invertible = FALSE)
 
-fMatInv(x, is_sym_pd = FALSE)
+fMatInv(X, is_sym_pd = FALSE)
 
-fMatPseudoInv(x)
+fMatAdd(X, Y)
 
-fMatAdd(x, y)
+fMatSubtract(X, Y)
 
-fMatSubtract(x, y)
+fMatRowSum(X)
 
-fMatSumDiffSquared(x, y)
+fMatColSum(X)
 
-fMatDet(x)
+fMatRowMin(X)
+
+fMatColMin(X)
+
+fMatRowMax(X)
+
+fMatColMax(X)
+
+fMatDet(X)
 }
 \arguments{
-\item{x, y}{matrices}
-
-\item{fast}{specify whether to enable faster computation of the linear model solution
-by disabling the use of rcond, iterative refinement, and equilibration.}
+\item{X, Y}{matrices}
 
 \item{is_sym_pd}{specific whether the input matrix is symmetric/Hermitian positive definite.
 Enabling this option can result in faster computation if the matrix satisfies these properties.}
+
+\item{is_invertible}{specify whether to enable faster computation of the linear model solution
+by disabling the use of rcond, iterative refinement, and equilibration.}
 }
 \value{
 The result matrices
@@ -56,8 +68,9 @@ all.equal(XtX, XtX2) # TRUE
 invXtX <- fMatInv(XtX)
 fMatAdd(x, z) # x + z
 fMatSubtract(x, z) # x - z
-fMatSumDiffSquared(x, z) # sum((x-z)^2)
-
-A <- matrix(c(7,6,4,8,10,11,12,9,3,5,1,2), 3, 4)
-A \%*\% fMatPseudoInv(A) # => very close to identity matrix
+fMatRowSum(x) # rowSums(x)
+fMatRowMin(x) # apply(x, 1, min)
+fMatRowMax(x) # apply(x, 1, max)
+fMatColMin(x) # apply(x, 2, min)
+fMatColMax(x) # apply(x, 2, max)
 }

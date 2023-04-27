@@ -16,13 +16,12 @@
 // along with oneMKL. If not, see <http://www.gnu.org/licenses/>.
 
 #include <oneMKL.h>
-#include <string>
 
 // [[Rcpp::depends(oneMKL)]]
 
 //' Functions that use oneMKL for fast matrix calculations
 //'
-//' @param x,y matrices
+//' @param X,Y matrices
 //' @return The result matrices
 //'
 //' @examples
@@ -35,84 +34,131 @@
 //' invXtX <- fMatInv(XtX)
 //' fMatAdd(x, z) # x + z
 //' fMatSubtract(x, z) # x - z
-//' fMatSumDiffSquared(x, z) # sum((x-z)^2)
-//'
-//' A <- matrix(c(7,6,4,8,10,11,12,9,3,5,1,2), 3, 4)
-//' A %*% fMatPseudoInv(A) # => very close to identity matrix
+//' fMatRowSum(x) # rowSums(x)
+//' fMatRowMin(x) # apply(x, 1, min)
+//' fMatRowMax(x) # apply(x, 1, max)
+//' fMatColMin(x) # apply(x, 2, min)
+//' fMatColMax(x) # apply(x, 2, max)
 //' @rdname fast_matrix_ops
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-arma::mat fMatProd(const arma::mat & x, const arma::mat & y) {
-  return x * y;
+Eigen::MatrixXd fMatProd(
+    const Eigen::Map<Eigen::MatrixXd> X,
+    const Eigen::Map<Eigen::MatrixXd> Y
+) {
+  return X * Y;
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-arma::mat fMatTransProd(const arma::mat & x, const arma::mat & y) {
-  return x.t() * y;
+Eigen::MatrixXd fMatTransProd(
+    const Eigen::Map<Eigen::MatrixXd> X,
+    const Eigen::Map<Eigen::MatrixXd> Y
+) {
+  return X.transpose() * Y;
 }
 
-//' @param fast specify whether to enable faster computation of the linear model solution
+//' @param is_invertible specify whether to enable faster computation of the linear model solution
 //'   by disabling the use of rcond, iterative refinement, and equilibration.
 //' @param is_sym_pd specific whether the input matrix is symmetric/Hermitian positive definite.
 //'   Enabling this option can result in faster computation if the matrix satisfies these properties.
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-arma::mat fMatSolve(const arma::mat & x, const arma::mat & y, bool fast= false, bool is_sym_pd = false) {
-  if (fast) {
-    return arma::solve(x, y, arma::solve_opts::fast);
-  } else if (is_sym_pd) {
-    return arma::solve(x, y, arma::solve_opts::likely_sympd);
-  } else {
-    return arma::solve(x, y);
-  }
-}
-
-//' @name fast_matrix_ops
-//' @export
-// [[Rcpp::export]]
-arma::mat fMatInv(const arma::mat & x, bool is_sym_pd = false) {
+Eigen::MatrixXd fMatSolve(
+    const Eigen::Map<Eigen::MatrixXd> X,
+    const Eigen::Map<Eigen::MatrixXd> Y,
+    bool is_sym_pd = false,
+    bool is_invertible = false
+) {
   if (is_sym_pd) {
-    return arma::inv_sympd(x);
+    return X.llt().solve(Y);
+  } else if (is_invertible) {
+    return X.partialPivLu().solve(Y);
   } else {
-    return arma::inv(x);
+    return X.fullPivLu().solve(Y);
   }
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-arma::mat fMatPseudoInv(const arma::mat & x) {
-  return arma::pinv(x);
+Eigen::MatrixXd fMatInv(const Eigen::Map<Eigen::MatrixXd> X, bool is_sym_pd = false) {
+  if (is_sym_pd) {
+    Eigen::MatrixXd I = Eigen::MatrixXd::Identity(X.rows(), X.cols());
+    return X.llt().solve(I);
+  } else {
+    return X.inverse();
+  }
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-arma::mat fMatAdd(const arma::mat & x, const arma::mat & y) {
-  return x + y;
+Eigen::MatrixXd fMatAdd(
+    const Eigen::Map<Eigen::MatrixXd> X,
+    const Eigen::Map<Eigen::MatrixXd> Y
+) {
+  return X + Y;
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-arma::mat fMatSubtract(const arma::mat & x, const arma::mat & y) {
-  return x - y;
+Eigen::MatrixXd fMatSubtract(
+    const Eigen::Map<Eigen::MatrixXd> X,
+    const Eigen::Map<Eigen::MatrixXd> Y
+) {
+  return X - Y;
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-double fMatSumDiffSquared(const arma::mat & x, const arma::mat & y) {
-  return arma::sum(arma::sum(arma::square(x-y)));
+Eigen::MatrixXd fMatRowSum(const Eigen::Map<Eigen::MatrixXd> X) {
+  return X.rowwise().sum();
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-double fMatDet(const arma::mat & x) {
-  return arma::det(x);
+Eigen::MatrixXd fMatColSum(const Eigen::Map<Eigen::MatrixXd> X) {
+  return X.colwise().sum();
+}
+
+//' @name fast_matrix_ops
+//' @export
+// [[Rcpp::export]]
+Eigen::MatrixXd fMatRowMin(const Eigen::Map<Eigen::MatrixXd> X) {
+  return X.rowwise().minCoeff();
+}
+
+//' @name fast_matrix_ops
+//' @export
+// [[Rcpp::export]]
+Eigen::MatrixXd fMatColMin(const Eigen::Map<Eigen::MatrixXd> X) {
+  return X.colwise().minCoeff();
+}
+
+//' @name fast_matrix_ops
+//' @export
+// [[Rcpp::export]]
+Eigen::MatrixXd fMatRowMax(const Eigen::Map<Eigen::MatrixXd> X) {
+  return X.rowwise().maxCoeff();
+}
+
+//' @name fast_matrix_ops
+//' @export
+// [[Rcpp::export]]
+Eigen::MatrixXd fMatColMax(const Eigen::Map<Eigen::MatrixXd> X) {
+  return X.colwise().maxCoeff();
+}
+
+//' @name fast_matrix_ops
+//' @export
+// [[Rcpp::export]]
+double fMatDet(const Eigen::Map<Eigen::MatrixXd> X) {
+  return X.determinant();
 }

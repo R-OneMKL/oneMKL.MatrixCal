@@ -16,14 +16,12 @@
 // along with oneMKL. If not, see <http://www.gnu.org/licenses/>.
 
 #include <oneMKL.h>
-#include <string>
 
 // [[Rcpp::depends(oneMKL)]]
 
 //' Functions to do the decomposition by leveraging Intel MKL
 //'
-//' @param x A matrix to perform decomposition.
-//' @param upper A Boolean value to indicate the output matrix is a upper matrix. False will return a lower matrix.
+//' @param X A matrix to perform decomposition.
 //' @rdname fast_matrix_decomposition
 //' @name fast_matrix_decomposition
 //' @examples
@@ -55,11 +53,11 @@
 //' qrRes$Q %*% qrRes$R # X = Q R
 //' @export
 // [[Rcpp::export]]
-arma::mat fMatChol(const arma::mat & x, bool upper = true){
-  std::string layout = upper?"upper":"lower";
-  return arma::chol(x, layout.c_str());
+Eigen::MatrixXd fMatChol(const Eigen::Map<Eigen::MatrixXd> X){
+  return X.llt().matrixL();
 }
 
+/*
 //' @param economical Whether to use economical SVD.
 //' @name fast_matrix_decomposition
 //' @export
@@ -153,3 +151,5 @@ Rcpp::List fMatQr(const arma::mat & x, bool permutation_matrix = false, bool eco
     );
   }
 }
+
+*/
