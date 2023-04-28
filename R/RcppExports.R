@@ -12,30 +12,52 @@
 #' all.equal(fMatChol(m), chol(m)) # It's the same to R
 #' fMatChol(m, FALSE) # lower CHOL matrix
 #'
-#' hilbert <- function(n) { i <- 1:n; 1 / outer(i - 1, i, "+") }
-#' X <- hilbert(9)[, 1:6]
-#' (s <- fMatSvd(X))
-#' D <- diag(as.vector(s$d))
-#' s$u[ , 1:6] %*% D %*% t(s$v) #  X = U D V'
-#' t(s$u[ , 1:6]) %*% X %*% s$v #  D = U' X V
-#'
-#' fMatEigen(cbind(c(1,-1), c(-1,1)), TRUE)
-#' fMatEigen(cbind(c(1,-1), c(-1,1)), FALSE) # Same, but different datatype
-#'
 #' X <- matrix(rnorm(9), 3, 3)
-#' res <- fMatLu(X, TRUE)
-#' # Note that L is generally not lower-triangular when permutation_matrix = FALSE
-#' res$P %*% res$L %*% res$U # X = P' L U
-#'
-#' schurRes <- fMatSchur(X)
-#' # Note that Schur decomposition is not unique in general.
-#' schurRes$U %*% schurRes$S %*% t(schurRes$U) # X = U S U'
+#' luRes <- fMatLu(X)
+#' solve(luRes$P) %*% luRes$L %*% luRes$U # X = P^(-1) L U
 #'
 #' qrRes <- fMatQr(X)
 #' qrRes$Q %*% qrRes$R # X = Q R
+#'
+#' hilbert <- function(n) { i <- 1:n; 1 / outer(i - 1, i, "+") }
+#' X <- hilbert(9)[, 1:6]
+#' (svdRes <- fMatSvd(X))
+#' D <- diag(as.vector(svdRes$d))
+#' svdRes$u[ , 1:6] %*% D %*% t(svdRes$v) #  X = U D V'
+#' t(svdRes$u[ , 1:6]) %*% X %*% svdRes$v #  D = U' X V
+#'
+#' X <- hilbert(9)
+#' eigenRes <- fMatEigen(X)
+#' Re(eigenRes$vectors %*% diag(eigenRes$values) %*% solve(eigenRes$vectors)) # X = V D V^(-1)
 #' @export
 fMatChol <- function(X) {
     .Call('_oneMKL_MatrixCal_fMatChol', PACKAGE = 'oneMKL.MatrixCal', X)
+}
+
+#' @param permutation_matrix Whether the permutation matrix is outputted.
+#' @name fast_matrix_decomposition
+#' @export
+fMatLu <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatLu', PACKAGE = 'oneMKL.MatrixCal', X)
+}
+
+#' @name fast_matrix_decomposition
+#' @export
+fMatQr <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatQr', PACKAGE = 'oneMKL.MatrixCal', X)
+}
+
+#' @param economical Whether to use economical SVD.
+#' @name fast_matrix_decomposition
+#' @export
+fMatSvd <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatSvd', PACKAGE = 'oneMKL.MatrixCal', X)
+}
+
+#' @name fast_matrix_decomposition
+#' @export
+fMatEigen <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatEigen', PACKAGE = 'oneMKL.MatrixCal', X)
 }
 
 #' Functions that use oneMKL for fast matrix calculations
@@ -58,6 +80,7 @@ fMatChol <- function(X) {
 #' fMatRowMax(x) # apply(x, 1, max)
 #' fMatColMin(x) # apply(x, 2, min)
 #' fMatColMax(x) # apply(x, 2, max)
+#' fMatRank(x)
 #' @rdname fast_matrix_ops
 #' @name fast_matrix_ops
 #' @export
@@ -139,6 +162,18 @@ fMatColMax <- function(X) {
 #' @export
 fMatDet <- function(X) {
     .Call('_oneMKL_MatrixCal_fMatDet', PACKAGE = 'oneMKL.MatrixCal', X)
+}
+
+#' @name fast_matrix_ops
+#' @export
+fMatRank <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatRank', PACKAGE = 'oneMKL.MatrixCal', X)
+}
+
+#' @name fast_matrix_ops
+#' @export
+fMatRCond <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatRCond', PACKAGE = 'oneMKL.MatrixCal', X)
 }
 
 #' Function to get the version of Intel MKL

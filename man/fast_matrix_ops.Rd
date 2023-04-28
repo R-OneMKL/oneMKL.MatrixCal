@@ -15,6 +15,8 @@
 \alias{fMatRowMax}
 \alias{fMatColMax}
 \alias{fMatDet}
+\alias{fMatRank}
+\alias{fMatRCond}
 \title{Functions that use oneMKL for fast matrix calculations}
 \usage{
 fMatProd(X, Y)
@@ -42,6 +44,10 @@ fMatRowMax(X)
 fMatColMax(X)
 
 fMatDet(X)
+
+fMatRank(X)
+
+fMatRCond(X)
 }
 \arguments{
 \item{X, Y}{matrices}
@@ -73,4 +79,5 @@ fMatRowMin(x) # apply(x, 1, min)
 fMatRowMax(x) # apply(x, 1, max)
 fMatColMin(x) # apply(x, 2, min)
 fMatColMax(x) # apply(x, 2, max)
+fMatRank(x)
 }

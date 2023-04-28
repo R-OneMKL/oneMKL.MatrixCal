@@ -23,6 +23,50 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// fMatLu
+Rcpp::List fMatLu(const Eigen::Map<Eigen::MatrixXd> X);
+RcppExport SEXP _oneMKL_MatrixCal_fMatLu(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatLu(X));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fMatQr
+Rcpp::List fMatQr(const Eigen::Map<Eigen::MatrixXd> X);
+RcppExport SEXP _oneMKL_MatrixCal_fMatQr(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatQr(X));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fMatSvd
+Rcpp::List fMatSvd(const Eigen::Map<Eigen::MatrixXd> X);
+RcppExport SEXP _oneMKL_MatrixCal_fMatSvd(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatSvd(X));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fMatEigen
+Rcpp::List fMatEigen(const Eigen::Map<Eigen::MatrixXd> X);
+RcppExport SEXP _oneMKL_MatrixCal_fMatEigen(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatEigen(X));
+    return rcpp_result_gen;
+END_RCPP
+}
 // fMatProd
 Eigen::MatrixXd fMatProd(const Eigen::Map<Eigen::MatrixXd> X, const Eigen::Map<Eigen::MatrixXd> Y);
 RcppExport SEXP _oneMKL_MatrixCal_fMatProd(SEXP XSEXP, SEXP YSEXP) {
@@ -174,6 +218,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// fMatRank
+double fMatRank(const Eigen::Map<Eigen::MatrixXd> X);
+RcppExport SEXP _oneMKL_MatrixCal_fMatRank(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatRank(X));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fMatRCond
+double fMatRCond(const Eigen::Map<Eigen::MatrixXd> X);
+RcppExport SEXP _oneMKL_MatrixCal_fMatRCond(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatRCond(X));
+    return rcpp_result_gen;
+END_RCPP
+}
 // getMKLVersion
 std::string getMKLVersion();
 RcppExport SEXP _oneMKL_MatrixCal_getMKLVersion() {
@@ -208,6 +274,10 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_oneMKL_MatrixCal_fMatChol", (DL_FUNC) &_oneMKL_MatrixCal_fMatChol, 1},
+    {"_oneMKL_MatrixCal_fMatLu", (DL_FUNC) &_oneMKL_MatrixCal_fMatLu, 1},
+    {"_oneMKL_MatrixCal_fMatQr", (DL_FUNC) &_oneMKL_MatrixCal_fMatQr, 1},
+    {"_oneMKL_MatrixCal_fMatSvd", (DL_FUNC) &_oneMKL_MatrixCal_fMatSvd, 1},
+    {"_oneMKL_MatrixCal_fMatEigen", (DL_FUNC) &_oneMKL_MatrixCal_fMatEigen, 1},
     {"_oneMKL_MatrixCal_fMatProd", (DL_FUNC) &_oneMKL_MatrixCal_fMatProd, 2},
     {"_oneMKL_MatrixCal_fMatTransProd", (DL_FUNC) &_oneMKL_MatrixCal_fMatTransProd, 2},
     {"_oneMKL_MatrixCal_fMatSolve", (DL_FUNC) &_oneMKL_MatrixCal_fMatSolve, 4},
@@ -221,6 +291,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_oneMKL_MatrixCal_fMatRowMax", (DL_FUNC) &_oneMKL_MatrixCal_fMatRowMax, 1},
     {"_oneMKL_MatrixCal_fMatColMax", (DL_FUNC) &_oneMKL_MatrixCal_fMatColMax, 1},
     {"_oneMKL_MatrixCal_fMatDet", (DL_FUNC) &_oneMKL_MatrixCal_fMatDet, 1},
+    {"_oneMKL_MatrixCal_fMatRank", (DL_FUNC) &_oneMKL_MatrixCal_fMatRank, 1},
+    {"_oneMKL_MatrixCal_fMatRCond", (DL_FUNC) &_oneMKL_MatrixCal_fMatRCond, 1},
     {"_oneMKL_MatrixCal_getMKLVersion", (DL_FUNC) &_oneMKL_MatrixCal_getMKLVersion, 0},
     {"_oneMKL_MatrixCal_setMKLThreads", (DL_FUNC) &_oneMKL_MatrixCal_setMKLThreads, 1},
     {"_oneMKL_MatrixCal_getMKLThreads", (DL_FUNC) &_oneMKL_MatrixCal_getMKLThreads, 0},

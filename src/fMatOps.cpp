@@ -39,6 +39,7 @@
 //' fMatRowMax(x) # apply(x, 1, max)
 //' fMatColMin(x) # apply(x, 2, min)
 //' fMatColMax(x) # apply(x, 2, max)
+//' fMatRank(x)
 //' @rdname fast_matrix_ops
 //' @name fast_matrix_ops
 //' @export
@@ -161,4 +162,19 @@ Eigen::MatrixXd fMatColMax(const Eigen::Map<Eigen::MatrixXd> X) {
 // [[Rcpp::export]]
 double fMatDet(const Eigen::Map<Eigen::MatrixXd> X) {
   return X.determinant();
+}
+
+//' @name fast_matrix_ops
+//' @export
+// [[Rcpp::export]]
+double fMatRank(const Eigen::Map<Eigen::MatrixXd> X) {
+  return X.colPivHouseholderQr().rank();
+}
+
+
+//' @name fast_matrix_ops
+//' @export
+// [[Rcpp::export]]
+double fMatRCond(const Eigen::Map<Eigen::MatrixXd> X) {
+  return X.partialPivLu().rcond();
 }

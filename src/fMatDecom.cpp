@@ -30,126 +30,78 @@
 //' all.equal(fMatChol(m), chol(m)) # It's the same to R
 //' fMatChol(m, FALSE) # lower CHOL matrix
 //'
-//' hilbert <- function(n) { i <- 1:n; 1 / outer(i - 1, i, "+") }
-//' X <- hilbert(9)[, 1:6]
-//' (s <- fMatSvd(X))
-//' D <- diag(as.vector(s$d))
-//' s$u[ , 1:6] %*% D %*% t(s$v) #  X = U D V'
-//' t(s$u[ , 1:6]) %*% X %*% s$v #  D = U' X V
-//'
-//' fMatEigen(cbind(c(1,-1), c(-1,1)), TRUE)
-//' fMatEigen(cbind(c(1,-1), c(-1,1)), FALSE) # Same, but different datatype
-//'
 //' X <- matrix(rnorm(9), 3, 3)
-//' res <- fMatLu(X, TRUE)
-//' # Note that L is generally not lower-triangular when permutation_matrix = FALSE
-//' res$P %*% res$L %*% res$U # X = P' L U
-//'
-//' schurRes <- fMatSchur(X)
-//' # Note that Schur decomposition is not unique in general.
-//' schurRes$U %*% schurRes$S %*% t(schurRes$U) # X = U S U'
+//' luRes <- fMatLu(X)
+//' solve(luRes$P) %*% luRes$L %*% luRes$U # X = P^(-1) L U
 //'
 //' qrRes <- fMatQr(X)
 //' qrRes$Q %*% qrRes$R # X = Q R
+//'
+//' hilbert <- function(n) { i <- 1:n; 1 / outer(i - 1, i, "+") }
+//' X <- hilbert(9)[, 1:6]
+//' (svdRes <- fMatSvd(X))
+//' D <- diag(as.vector(svdRes$d))
+//' svdRes$u[ , 1:6] %*% D %*% t(svdRes$v) #  X = U D V'
+//' t(svdRes$u[ , 1:6]) %*% X %*% svdRes$v #  D = U' X V
+//'
+//' X <- hilbert(9)
+//' eigenRes <- fMatEigen(X)
+//' Re(eigenRes$vectors %*% diag(eigenRes$values) %*% solve(eigenRes$vectors)) # X = V D V^(-1)
 //' @export
 // [[Rcpp::export]]
 Eigen::MatrixXd fMatChol(const Eigen::Map<Eigen::MatrixXd> X){
-  return X.llt().matrixL();
-}
-
-/*
-//' @param economical Whether to use economical SVD.
-//' @name fast_matrix_decomposition
-//' @export
-// [[Rcpp::export]]
-Rcpp::List fMatSvd(const arma::mat & x, bool economical = false){
-  arma::vec d;
-  arma::mat u, v;
-  if (economical) {
-    arma::svd_econ(u, d, v, x);
-  } else {
-    arma::svd(u, d, v, x);
-  }
-  return Rcpp::List::create(
-    Rcpp::Named("d") = d, Rcpp::Named("u") = u, Rcpp::Named("v") = v
-  );
-}
-
-//' @param is_symmetric Whether the matrix is symmetric.
-//' @name fast_matrix_decomposition
-//' @export
-// [[Rcpp::export]]
-Rcpp::List fMatEigen(const arma::mat & x, bool is_symmetric = false){
-  if (is_symmetric) {
-    arma::vec eigval;
-    arma::mat eigvec;
-    arma::eig_sym(eigval, eigvec, x);
-    return Rcpp::List::create(
-      Rcpp::Named("values") = eigval, Rcpp::Named("vectors") = eigvec
-    );
-  } else {
-    arma::cx_vec eigval;
-    arma::cx_mat eigvec;
-    arma::eig_gen(eigval, eigvec, x);
-    return Rcpp::List::create(
-      Rcpp::Named("values") = eigval, Rcpp::Named("vectors") = eigvec
-    );
-  }
+  return X.llt().matrixU();
 }
 
 //' @param permutation_matrix Whether the permutation matrix is outputted.
 //' @name fast_matrix_decomposition
 //' @export
 // [[Rcpp::export]]
-Rcpp::List fMatLu(const arma::mat & x, bool permutation_matrix = false){
-  if (permutation_matrix) {
-    arma::mat L, U, P;
-    arma::lu(L, U, P, x);
-    return Rcpp::List::create(
-      Rcpp::Named("L") = L, Rcpp::Named("P") = P, Rcpp::Named("U") = U
-    );
-  } else {
-    arma::mat L, U;
-    arma::lu(L, U, x);
-    return Rcpp::List::create(
-      Rcpp::Named("L") = L, Rcpp::Named("U") = U
-    );
-  }
-}
-
-//' @name fast_matrix_decomposition
-//' @export
-// [[Rcpp::export]]
-Rcpp::List fMatSchur(const arma::mat & x){
-  arma::mat U, S;
-  arma::schur(U, S, x);
+Rcpp::List fMatLu(const Eigen::Map<Eigen::MatrixXd> X){
+  auto lu = X.partialPivLu();
+  auto luMatrix = lu.matrixLU();
+  Eigen::MatrixXd L = luMatrix.triangularView<Eigen::StrictlyLower>();
+  L.diagonal().setOnes();
+  Eigen::MatrixXd U = luMatrix.triangularView<Eigen::Upper>();
+  Eigen::MatrixXd P = lu.permutationP();
   return Rcpp::List::create(
-    Rcpp::Named("U") = U, Rcpp::Named("S") = S
+    Rcpp::Named("L") = L,
+    Rcpp::Named("P") = P,
+    Rcpp::Named("U") = U
   );
 }
 
 //' @name fast_matrix_decomposition
 //' @export
 // [[Rcpp::export]]
-Rcpp::List fMatQr(const arma::mat & x, bool permutation_matrix = false, bool economical = false){
-  if (permutation_matrix) {
-    arma::mat Q, R;
-    arma::umat P;
-    arma::qr(Q, R, P, x);
-    return Rcpp::List::create(
-      Rcpp::Named("Q") = Q, Rcpp::Named("P") = P, Rcpp::Named("R") = R
-    );
-  } else {
-    arma::mat Q, R;
-    if (economical) {
-      arma::qr_econ(Q, R, x);
-    } else {
-      arma::qr(Q, R, x);
-    }
-    return Rcpp::List::create(
-      Rcpp::Named("Q") = Q, Rcpp::Named("R") = R
-    );
-  }
+Rcpp::List fMatQr(const Eigen::Map<Eigen::MatrixXd> X){
+  auto qr = X.householderQr();
+  Eigen::MatrixXd Q = qr.householderQ();
+  Eigen::MatrixXd R = qr.matrixQR().triangularView<Eigen::Upper>();
+  return Rcpp::List::create(
+    Rcpp::Named("Q") = Q, Rcpp::Named("R") = R
+  );
 }
 
-*/
+//' @param economical Whether to use economical SVD.
+//' @name fast_matrix_decomposition
+//' @export
+// [[Rcpp::export]]
+Rcpp::List fMatSvd(const Eigen::Map<Eigen::MatrixXd> X){
+  auto svd = X.jacobiSvd(Eigen::ComputeFullV | Eigen::ComputeFullU);
+  return Rcpp::List::create(
+    Rcpp::Named("d") = svd.singularValues(),
+    Rcpp::Named("u") = svd.matrixU(),
+    Rcpp::Named("v") = svd.matrixV()
+  );
+}
+
+//' @name fast_matrix_decomposition
+//' @export
+// [[Rcpp::export]]
+Rcpp::List fMatEigen(const Eigen::Map<Eigen::MatrixXd> X){
+  Eigen::EigenSolver<Eigen::MatrixXd> es(X);
+  return Rcpp::List::create(
+    Rcpp::Named("values") = es.eigenvalues(), Rcpp::Named("vectors") = es.eigenvectors()
+  );
+}

@@ -14,9 +14,6 @@ testMatOps <- function() {
   # fMatDet
   XtX <- fMatTransProd(x, x)
   checkEquals(fMatDet(XtX), det(XtX))
-
-  # fMatSumDiffSquared (sum((x-z)^2))
-  checkEquals(fMatSumDiffSquared(x, z), sum((x-z)^2))
 }
 
 testMatInverse <- function() {
@@ -32,8 +29,4 @@ testMatInverse <- function() {
   checkEquals(fMatInv(z), solve(z))
   checkEquals(fMatInv(z) %*% z, diag(1, 2))
   checkEquals(fMatInv(z, TRUE) %*% z, diag(1, 2))
-
-  # fMatPseudoInv
-  A <- matrix(c(7,6,4,8,10,11,12,9,3,5,1,2), 3, 4)
-  checkEquals(A %*% fMatPseudoInv(A), diag(1, 3, 3))
 }
