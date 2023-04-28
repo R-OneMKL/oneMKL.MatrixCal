@@ -23,36 +23,36 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// fMatLu
-Rcpp::List fMatLu(const Eigen::Map<Eigen::MatrixXd> X);
-RcppExport SEXP _oneMKL_MatrixCal_fMatLu(SEXP XSEXP) {
+// fMatLU
+Rcpp::List fMatLU(const Eigen::Map<Eigen::MatrixXd> X);
+RcppExport SEXP _oneMKL_MatrixCal_fMatLU(SEXP XSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
-    rcpp_result_gen = Rcpp::wrap(fMatLu(X));
+    rcpp_result_gen = Rcpp::wrap(fMatLU(X));
     return rcpp_result_gen;
 END_RCPP
 }
-// fMatQr
-Rcpp::List fMatQr(const Eigen::Map<Eigen::MatrixXd> X);
-RcppExport SEXP _oneMKL_MatrixCal_fMatQr(SEXP XSEXP) {
+// fMatQR
+Rcpp::List fMatQR(const Eigen::Map<Eigen::MatrixXd> X);
+RcppExport SEXP _oneMKL_MatrixCal_fMatQR(SEXP XSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
-    rcpp_result_gen = Rcpp::wrap(fMatQr(X));
+    rcpp_result_gen = Rcpp::wrap(fMatQR(X));
     return rcpp_result_gen;
 END_RCPP
 }
-// fMatSvd
-Rcpp::List fMatSvd(const Eigen::Map<Eigen::MatrixXd> X);
-RcppExport SEXP _oneMKL_MatrixCal_fMatSvd(SEXP XSEXP) {
+// fMatSVD
+Rcpp::List fMatSVD(const Eigen::Map<Eigen::MatrixXd> X);
+RcppExport SEXP _oneMKL_MatrixCal_fMatSVD(SEXP XSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
-    rcpp_result_gen = Rcpp::wrap(fMatSvd(X));
+    rcpp_result_gen = Rcpp::wrap(fMatSVD(X));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -274,9 +274,9 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_oneMKL_MatrixCal_fMatChol", (DL_FUNC) &_oneMKL_MatrixCal_fMatChol, 1},
-    {"_oneMKL_MatrixCal_fMatLu", (DL_FUNC) &_oneMKL_MatrixCal_fMatLu, 1},
-    {"_oneMKL_MatrixCal_fMatQr", (DL_FUNC) &_oneMKL_MatrixCal_fMatQr, 1},
-    {"_oneMKL_MatrixCal_fMatSvd", (DL_FUNC) &_oneMKL_MatrixCal_fMatSvd, 1},
+    {"_oneMKL_MatrixCal_fMatLU", (DL_FUNC) &_oneMKL_MatrixCal_fMatLU, 1},
+    {"_oneMKL_MatrixCal_fMatQR", (DL_FUNC) &_oneMKL_MatrixCal_fMatQR, 1},
+    {"_oneMKL_MatrixCal_fMatSVD", (DL_FUNC) &_oneMKL_MatrixCal_fMatSVD, 1},
     {"_oneMKL_MatrixCal_fMatEigen", (DL_FUNC) &_oneMKL_MatrixCal_fMatEigen, 1},
     {"_oneMKL_MatrixCal_fMatProd", (DL_FUNC) &_oneMKL_MatrixCal_fMatProd, 2},
     {"_oneMKL_MatrixCal_fMatTransProd", (DL_FUNC) &_oneMKL_MatrixCal_fMatTransProd, 2},

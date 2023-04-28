@@ -17,7 +17,7 @@
 \alias{fMatDet}
 \alias{fMatRank}
 \alias{fMatRCond}
-\title{Functions that use oneMKL for fast matrix calculations}
+\title{Functions that use oneMKL for fast matrix calculations through RcppEigen}
 \usage{
 fMatProd(X, Y)
 
@@ -50,19 +50,38 @@ fMatRank(X)
 fMatRCond(X)
 }
 \arguments{
-\item{X, Y}{matrices}
+\item{X, Y}{The input matrices 'X' and 'Y'.}
 
-\item{is_sym_pd}{specific whether the input matrix is symmetric/Hermitian positive definite.
-Enabling this option can result in faster computation if the matrix satisfies these properties.}
+\item{is_sym_pd}{A logical variable indicating whether the input matrix `X` is symmetric positive definitive.
+Better computational performance is expected if the matrix is symmetric positive definitive.}
 
-\item{is_invertible}{specify whether to enable faster computation of the linear model solution
-by disabling the use of rcond, iterative refinement, and equilibration.}
+\item{is_invertible}{A logical variable indicating whether the input matrix `X` is invertible.
+Better computational performance is expected if the matrix is invertible.}
 }
 \value{
-The result matrices
+The corresponding results.
 }
 \description{
-Functions that use oneMKL for fast matrix calculations
+`fMatProd` returns the multiplication of matrices `X` and `Y`, i.e., `XY`.
+`fMatTransProd` returns the product of the transpose of the matrix `X` and the matrix `Y`, i.e., `X^T Y`.
+`fMatInv` returns the inverse of the matrix `X`, i.e., `X^(-1)`.
+ If the matrix `X` is symmetric positive definite, Cholesky decomposition
+ will be used for better computational performance.
+`fMatSolve` returns the solution of a linear system `AX=b`.
+ If the matrix `X` is symmetric positive definite, Cholesky decomposition
+ will be used for better computational performance.
+ If the matrix `X` is invertible, the LU decomposition
+ will be used for better computational performance.
+`fMatAdd` returns the sum of matrices `X` and `Y`, i.e., `X + Y`
+`fMatSubtract` returns the result of the matrix `X` minus the matrix `Y`, namely, `X - Y`.
+`fMatDet` returns the determinant of the matrix `X`.
+`fMatRank` returns the rank of the matrix `X`.
+`fMatRowSum` returns the sum of each row.
+`fMatColSum` returns the sum of each column.
+`fMatRowMin` returns the minimum of each row.
+`fMatRowMax` returns the maximum of each row.
+`fMatColMin` returns the minimum of each column.
+`fMatColMax` returns the maximum of each column.
 }
 \examples{
 x <- matrix(rnorm(1e4), 100)
@@ -71,13 +90,19 @@ z <- matrix(rnorm(1e4), 100)
 XtX <- fMatProd(t(x), x)
 XtX2 <- fMatTransProd(x, x)
 all.equal(XtX, XtX2) # TRUE
+
 invXtX <- fMatInv(XtX)
+fMatSolve(XtX, fMatTransProd(x, y)) # linear regression coefficients
+
 fMatAdd(x, z) # x + z
 fMatSubtract(x, z) # x - z
+
+fMatDet(x)
+fMatRank(x)
+
 fMatRowSum(x) # rowSums(x)
 fMatRowMin(x) # apply(x, 1, min)
 fMatRowMax(x) # apply(x, 1, max)
 fMatColMin(x) # apply(x, 2, min)
 fMatColMax(x) # apply(x, 2, max)
-fMatRank(x)
 }
