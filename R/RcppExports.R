@@ -121,6 +121,7 @@ fMatEigen <- function(X) {
 #' fMatDet(x)
 #' fMatRank(x)
 #'
+#' fMatColSum(x) # colSums(x)
 #' fMatRowSum(x) # rowSums(x)
 #' fMatRowMin(x) # apply(x, 1, min)
 #' fMatRowMax(x) # apply(x, 1, max)
