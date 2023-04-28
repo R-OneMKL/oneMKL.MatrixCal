@@ -58,7 +58,7 @@
 #' Z <- hilbert(9)[, 1:6]
 #' (svdRes <- fMatSVD(Z))
 #' svdRes$U[ , 1:6] %*% diag(svdRes$d) %*% t(svdRes$V) #  Z = U D V'
-#' t(svdRes$U[ , 1:6]) %*% X %*% svdRes$V #  D = U' Z V
+#' t(svdRes$U[ , 1:6]) %*% Z %*% svdRes$V #  D = U' Z V
 #' @export
 fMatChol <- function(X) {
     .Call('_oneMKL_MatrixCal_fMatChol', PACKAGE = 'oneMKL.MatrixCal', X)

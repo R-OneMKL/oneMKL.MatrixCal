@@ -81,5 +81,5 @@ eigenRes2$vectors \%*\% diag(eigenRes2$values) \%*\% fMatInv(eigenRes2$vectors)
 Z <- hilbert(9)[, 1:6]
 (svdRes <- fMatSVD(Z))
 svdRes$U[ , 1:6] \%*\% diag(svdRes$d) \%*\% t(svdRes$V) #  Z = U D V'
-t(svdRes$U[ , 1:6]) \%*\% X \%*\% svdRes$V #  D = U' Z V
+t(svdRes$U[ , 1:6]) \%*\% Z \%*\% svdRes$V #  D = U' Z V
 }
