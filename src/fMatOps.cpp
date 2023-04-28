@@ -25,14 +25,18 @@
 //' \item{\strong{fMatProd}}{This function returns the multiplication of matrices `X` and `Y`, i.e., `XY`.}
 //' \item{\strong{fMatTransProd}}{This function returns the product of the transpose of the matrix `X`
 //'  and the matrix `Y`, i.e., `X^T Y`.}
-//' \item{\strong{fMatInv}}{This function returns the inverse of the matrix `X`, i.e., `X^(-1)`.
-//'  If the matrix `X` is symmetric positive definite, Cholesky decomposition
-//'  will be used for better computational performance.}
 //' \item{\strong{fMatSolve}}{This function returns the solution of a linear system `AX=b`.
 //'  If the matrix `X` is symmetric positive definite, Cholesky decomposition
 //'  will be used for better computational performance.
 //'  If the matrix `X` is invertible, the LU decomposition
 //'  will be used for better computational performance.}
+//' \item{\strong{fMatInv}}{This function returns the inverse of the matrix `X`, i.e., `X^(-1)`.
+//'  If the matrix `X` is symmetric positive definite, Cholesky decomposition
+//'  will be used for better computational performance.}
+//' \item{\strong{fMatPseudoInv}}{This function returns the pseudo-inverse (also called generalized inverse or g-inverse) of the matrix 'X'.}
+//' \item{\strong{fMatLeastSquare}}{This function returns the solution of least square through QR decomposition.
+//' If `stable` = TRUE, a more stable but slower algorithm will be applied.
+//' If `is_X_full_rank` = FALSE, the pseudo-inverse will be applied.}
 //' \item{\strong{fMatAdd}}{This function returns the sum of matrices `X` and `Y`, i.e., `X + Y`}
 //' \item{\strong{fMatSubtract}}{This function returns the result of the matrix `X` minus the matrix `Y`, namely, `X - Y`.}
 //' \item{\strong{fMatDet}}{This function returns the determinant of the matrix `X`.}
@@ -46,6 +50,8 @@
 //' }
 //'
 //' @param X,Y The input matrices 'X' and 'Y'.
+//' @param is_X_symmetric A logical variable indicating whether the input matrix `X` is symmetric.
+//'  Better computational performance is expected if the matrix is symmetric.
 //' @return The corresponding results.
 //'
 //' @examples
@@ -77,9 +83,25 @@
 // [[Rcpp::export]]
 Eigen::MatrixXd fMatProd(
     const Eigen::Map<Eigen::MatrixXd> X,
-    const Eigen::Map<Eigen::MatrixXd> Y
+    Rcpp::NumericMatrix Y,
+    bool is_X_symmetric = false
 ) {
-  return X * Y;
+  if (Y.ncol() == 1) {
+    // to have the best performance
+    Eigen::Map<Eigen::VectorXd> b(Rcpp::as<Eigen::Map<Eigen::VectorXd>>(Y));
+    if (is_X_symmetric) {
+      return X.selfadjointView<Eigen::Lower>() * b;
+    } else {
+      return X * b;
+    }
+  } else {
+    Eigen::Map<Eigen::MatrixXd> Z(Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(Y));
+    if (is_X_symmetric) {
+      return X.selfadjointView<Eigen::Lower>() * Z;
+    } else {
+      return X * Z;
+    }
+  }
 }
 
 //' @name fast_matrix_ops
@@ -87,9 +109,25 @@ Eigen::MatrixXd fMatProd(
 // [[Rcpp::export]]
 Eigen::MatrixXd fMatTransProd(
     const Eigen::Map<Eigen::MatrixXd> X,
-    const Eigen::Map<Eigen::MatrixXd> Y
+    Rcpp::NumericMatrix Y,
+    bool is_X_symmetric = false
 ) {
-  return X.transpose() * Y;
+  if (Y.cols() == 1) {
+    // to have best performance
+    Eigen::Map<Eigen::VectorXd> b(Rcpp::as<Eigen::Map<Eigen::VectorXd>>(Y));
+    if (is_X_symmetric) {
+      return X.selfadjointView<Eigen::Lower>() * b;
+    } else {
+      return X.transpose() * b;
+    }
+  } else {
+    Eigen::Map<Eigen::MatrixXd> Z(Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(Y));
+    if (is_X_symmetric) {
+      return X.selfadjointView<Eigen::Lower>() * Z;
+    } else {
+      return X.transpose() * Z;
+    }
+  }
 }
 
 //' @param is_invertible A logical variable indicating whether the input matrix `X` is invertible.
@@ -123,6 +161,36 @@ Eigen::MatrixXd fMatInv(const Eigen::Map<Eigen::MatrixXd> X, bool is_sym_pd = fa
     return X.llt().solve(I);
   } else {
     return X.inverse();
+  }
+}
+
+//' @name fast_matrix_ops
+//' @export
+// [[Rcpp::export]]
+Eigen::MatrixXd fMatPseudoInv(const Eigen::Map<Eigen::MatrixXd> X) {
+  return X.completeOrthogonalDecomposition().pseudoInverse();
+}
+
+//' @param stable A logical variable indicating whether to use a more stable but slower algorithm.
+//' @param is_X_full_rank A logical variable indicating whether the input matrix 'X' is full-rank.
+//'  If false, the pseudo inverse will be applied.
+//' @name fast_matrix_ops
+//' @export
+// [[Rcpp::export]]
+Eigen::MatrixXd fMatLeastSquare(
+    const Eigen::Map<Eigen::MatrixXd> X,
+    const Eigen::Map<Eigen::VectorXd> Y,
+    bool stable = true,
+    bool is_X_full_rank = true
+) {
+  if (is_X_full_rank) {
+    if (stable) {
+      return X.householderQr().solve(Y);
+    } else {
+      return X.colPivHouseholderQr().solve(Y);
+    }
+  } else {
+    return X.completeOrthogonalDecomposition().solve(Y);
   }
 }
 

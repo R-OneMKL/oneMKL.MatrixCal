@@ -25,44 +25,58 @@
 //' \item{\strong{fMatChol}}{This function performs the Cholesky decomposition of the matrix `X`,
 //'  i.e., `X = L L^T`, where `L` is a lower triangular matrix with real
 //'  and positive diagonal entries, and `L^T` is the transpose of `L`.}
-//' \item{\strong{fMatLU}}{This function performs the LU decomposition of the matrix `X`, namely, `X = PLU`,
+//' \item{\strong{fMatLU}}{This function performs the LU decomposition of the matrix `X`, namely, `PX = LU`,
 //'  where `L` is a lower triangular matrix with unit diagonal entries,
 //'  `U` is an upper triangular matrix and `P` is a permutation matrix.}
 //' \item{\strong{fMatQR}}{This function performs the QR decomposition of the matrix `X`, i.e., `X = QR`,
-//'  where `Q` is an orthogonal matrix and `R` is an upper triangular matrix.}
+//'  where `Q` is an orthogonal matrix and `R` is an upper triangular matrix.
+//'  If `with_permutation_matrix` = TRUE, it will output a permutation matrix `P` as well.
+//'  The decomposition will be `XP = QR` which the algorithm is more stable than the one without a permutation matrix.}
 //' \item{\strong{fMatSVD}}{This function performs the singular value decomposition (SVD) of the matrix `X`, namely, `X = U D V^T`,
 //'  where `U` and `V` are orthogonal matrices and `D` is a diagonal matrix.}
 //' \item{\strong{fMatEigen}}{This function performs the eigenvalue decomposition of the matrix `X`,
 //'  i.e., `X = V D V^(-1)`, where 'V' is a matrix whose columns are the eigenvectors of 'X',
 //'  and 'D' is a diagonal matrix whose entries are the corresponding eigenvalues of 'X'.}
 //' \item{\strong{fMatEigen}}{This function returns a list of objects with two elements:  'values' and 'vectors',
-//'  which are respectively the eigenvalues and eigenvectors of 'X'.}
+//'  which are respectively the eigenvalues and eigenvectors of 'X'.
+//'  If `is_X_symmetric` = TRUE, only the real part will be outputted.}
 //' }
 //'
 //' @param X The input matrix.
 //' @rdname fast_matrix_decomposition
 //' @name fast_matrix_decomposition
 //' @examples
-//' m <- matrix(c(5,1,1,3),2,2)
-//' fMatChol(m)
-//' all.equal(fMatChol(m), chol(m)) # It's the same to R
+//' hilbert <- function(n) { i <- 1:n; 1 / outer(i - 1, i, "+") }
+//' # Cholesky decomposition
+//' X <- hilbert(16)
+//' fMatChol(X)
+//' all.equal(fMatChol(X), chol(X)) # It's the same to R
 //'
-//' X <- matrix(rnorm(9), 3, 3)
+//' # LU Decomposition
 //' luRes <- fMatLU(X)
-//' solve(luRes$P) %*% luRes$L %*% luRes$U # X = P^(-1) L U
+//' fMatInv(luRes$P) %*% luRes$L %*% luRes$U # X = P^(-1) L U
 //'
+//' # QR Decomposition
 //' qrRes <- fMatQR(X)
 //' qrRes$Q %*% qrRes$R # X = Q R
 //'
-//' hilbert <- function(n) { i <- 1:n; 1 / outer(i - 1, i, "+") }
-//' X <- hilbert(9)[, 1:6]
-//' (svdRes <- fMatSVD(X))
-//' svdRes$U[ , 1:6] %*% diag(svdRes$d) %*% t(svdRes$V) #  X = U D V'
-//' t(svdRes$U[ , 1:6]) %*% X %*% svdRes$V #  D = U' X V
+//' # QR Decomposition with Permutation matrix
+//' qrRes <- fMatQR(X, TRUE)
+//' qrRes$Q %*% qrRes$R %*% fMatInv(qrRes$P) # X = Q R P^{-1}
 //'
-//' X <- hilbert(9)
+//' # Eigen Decomposition
 //' eigenRes <- fMatEigen(X)
 //' Re(eigenRes$vectors %*% diag(eigenRes$values) %*% solve(eigenRes$vectors)) # X = V D V^(-1)
+//'
+//' # Eigen Decomposition for the symmetric matrix
+//' eigenRes2 <- fMatEigen(X, TRUE)
+//' eigenRes2$vectors %*% diag(eigenRes2$values) %*% fMatInv(eigenRes2$vectors)
+//'
+//' # SVD Decomposition
+//' Z <- hilbert(9)[, 1:6]
+//' (svdRes <- fMatSVD(Z))
+//' svdRes$U[ , 1:6] %*% diag(svdRes$d) %*% t(svdRes$V) #  Z = U D V'
+//' t(svdRes$U[ , 1:6]) %*% X %*% svdRes$V #  D = U' Z V
 //' @export
 // [[Rcpp::export]]
 Eigen::MatrixXd fMatChol(const Eigen::Map<Eigen::MatrixXd> X){
@@ -80,22 +94,54 @@ Rcpp::List fMatLU(const Eigen::Map<Eigen::MatrixXd> X){
   Eigen::MatrixXd U = luMatrix.triangularView<Eigen::Upper>();
   Eigen::MatrixXd P = lu.permutationP();
   return Rcpp::List::create(
-    Rcpp::Named("L") = L,
     Rcpp::Named("P") = P,
+    Rcpp::Named("L") = L,
     Rcpp::Named("U") = U
   );
 }
 
+//' @param with_permutation_matrix A logical variable indicating whether
+//' the QR decomposition is performed with a permutation matrix `P` outputted.
 //' @name fast_matrix_decomposition
 //' @export
 // [[Rcpp::export]]
-Rcpp::List fMatQR(const Eigen::Map<Eigen::MatrixXd> X){
-  auto qr = X.householderQr();
-  Eigen::MatrixXd Q = qr.householderQ();
-  Eigen::MatrixXd R = qr.matrixQR().triangularView<Eigen::Upper>();
-  return Rcpp::List::create(
-    Rcpp::Named("Q") = Q, Rcpp::Named("R") = R
-  );
+Rcpp::List fMatQR(const Eigen::Map<Eigen::MatrixXd> X, bool with_permutation_matrix = false){
+  if (with_permutation_matrix) {
+    auto pqr = X.colPivHouseholderQr();
+    Eigen::MatrixXd Q = pqr.householderQ();
+    Eigen::MatrixXd R = pqr.matrixQR().triangularView<Eigen::Upper>();
+    Eigen::ColPivHouseholderQR<Eigen::MatrixXd>::PermutationType PMat(pqr.colsPermutation());
+    Eigen::MatrixXd P = PMat * Eigen::MatrixXd::Identity(PMat.cols(), PMat.cols());
+    return Rcpp::List::create(
+      Rcpp::Named("P") = P, Rcpp::Named("Q") = Q, Rcpp::Named("R") = R
+    );
+  } else {
+    auto qr = X.householderQr();
+    Eigen::MatrixXd Q = qr.householderQ();
+    Eigen::MatrixXd R = qr.matrixQR().triangularView<Eigen::Upper>();
+    return Rcpp::List::create(
+      Rcpp::Named("Q") = Q, Rcpp::Named("R") = R
+    );
+  }
+}
+
+//' @param is_X_symmetric A logical variable indicating whether the input matrix `X` is symmetric.
+//'  Better computational performance is expected if the matrix is symmetric.
+//' @name fast_matrix_decomposition
+//' @export
+// [[Rcpp::export]]
+Rcpp::List fMatEigen(const Eigen::Map<Eigen::MatrixXd> X, bool is_X_symmetric = false){
+  if (is_X_symmetric) {
+    Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> es(X);
+    return Rcpp::List::create(
+      Rcpp::Named("values") = es.eigenvalues(), Rcpp::Named("vectors") = es.eigenvectors()
+    );
+  } else {
+    Eigen::EigenSolver<Eigen::MatrixXd> es(X);
+    return Rcpp::List::create(
+      Rcpp::Named("values") = es.eigenvalues(), Rcpp::Named("vectors") = es.eigenvectors()
+    );
+  }
 }
 
 //' @name fast_matrix_decomposition
@@ -107,15 +153,5 @@ Rcpp::List fMatSVD(const Eigen::Map<Eigen::MatrixXd> X){
     Rcpp::Named("d") = svd.singularValues(),
     Rcpp::Named("U") = svd.matrixU(),
     Rcpp::Named("V") = svd.matrixV()
-  );
-}
-
-//' @name fast_matrix_decomposition
-//' @export
-// [[Rcpp::export]]
-Rcpp::List fMatEigen(const Eigen::Map<Eigen::MatrixXd> X){
-  Eigen::EigenSolver<Eigen::MatrixXd> es(X);
-  return Rcpp::List::create(
-    Rcpp::Named("values") = es.eigenvalues(), Rcpp::Named("vectors") = es.eigenvectors()
   );
 }

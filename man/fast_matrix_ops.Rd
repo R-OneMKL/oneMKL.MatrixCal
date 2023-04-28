@@ -6,6 +6,8 @@
 \alias{fMatTransProd}
 \alias{fMatSolve}
 \alias{fMatInv}
+\alias{fMatPseudoInv}
+\alias{fMatLeastSquare}
 \alias{fMatAdd}
 \alias{fMatSubtract}
 \alias{fMatRowSum}
@@ -19,13 +21,17 @@
 \alias{fMatRCond}
 \title{Functions that use oneMKL for fast matrix calculations through RcppEigen}
 \usage{
-fMatProd(X, Y)
+fMatProd(X, Y, is_X_symmetric = FALSE)
 
-fMatTransProd(X, Y)
+fMatTransProd(X, Y, is_X_symmetric = FALSE)
 
 fMatSolve(X, Y, is_sym_pd = FALSE, is_invertible = FALSE)
 
 fMatInv(X, is_sym_pd = FALSE)
+
+fMatPseudoInv(X)
+
+fMatLeastSquare(X, Y, stable = TRUE, is_X_full_rank = TRUE)
 
 fMatAdd(X, Y)
 
@@ -52,11 +58,19 @@ fMatRCond(X)
 \arguments{
 \item{X, Y}{The input matrices 'X' and 'Y'.}
 
+\item{is_X_symmetric}{A logical variable indicating whether the input matrix `X` is symmetric.
+Better computational performance is expected if the matrix is symmetric.}
+
 \item{is_sym_pd}{A logical variable indicating whether the input matrix `X` is symmetric positive definitive.
 Better computational performance is expected if the matrix is symmetric positive definitive.}
 
 \item{is_invertible}{A logical variable indicating whether the input matrix `X` is invertible.
 Better computational performance is expected if the matrix is invertible.}
+
+\item{stable}{A logical variable indicating whether to use a more stable but slower algorithm.}
+
+\item{is_X_full_rank}{A logical variable indicating whether the input matrix 'X' is full-rank.
+If false, the pseudo inverse will be applied.}
 }
 \value{
 The corresponding results.
@@ -66,14 +80,18 @@ The corresponding results.
 \item{\strong{fMatProd}}{This function returns the multiplication of matrices `X` and `Y`, i.e., `XY`.}
 \item{\strong{fMatTransProd}}{This function returns the product of the transpose of the matrix `X`
  and the matrix `Y`, i.e., `X^T Y`.}
-\item{\strong{fMatInv}}{This function returns the inverse of the matrix `X`, i.e., `X^(-1)`.
- If the matrix `X` is symmetric positive definite, Cholesky decomposition
- will be used for better computational performance.}
 \item{\strong{fMatSolve}}{This function returns the solution of a linear system `AX=b`.
  If the matrix `X` is symmetric positive definite, Cholesky decomposition
  will be used for better computational performance.
  If the matrix `X` is invertible, the LU decomposition
  will be used for better computational performance.}
+\item{\strong{fMatInv}}{This function returns the inverse of the matrix `X`, i.e., `X^(-1)`.
+ If the matrix `X` is symmetric positive definite, Cholesky decomposition
+ will be used for better computational performance.}
+\item{\strong{fMatPseudoInv}}{This function returns the pseudo-inverse (also called generalized inverse or g-inverse) of the matrix 'X'.}
+\item{\strong{fMatLeastSquare}}{This function returns the solution of least square through QR decomposition.
+If `stable` = TRUE, a more stable but slower algorithm will be applied.
+If `is_X_full_rank` = FALSE, the pseudo-inverse will be applied.}
 \item{\strong{fMatAdd}}{This function returns the sum of matrices `X` and `Y`, i.e., `X + Y`}
 \item{\strong{fMatSubtract}}{This function returns the result of the matrix `X` minus the matrix `Y`, namely, `X - Y`.}
 \item{\strong{fMatDet}}{This function returns the determinant of the matrix `X`.}

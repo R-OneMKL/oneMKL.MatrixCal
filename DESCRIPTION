@@ -38,7 +38,7 @@ Description: The "oneMKL.MatrixCal" package provides an efficient and powerful t
   which can benefit a wide range of users.
 Depends: R (>= 4.2.0)
 Imports: Rcpp (>= 1.0.0), oneMKL, RcppEigen
-Suggests: RUnit, roxygen2
+Suggests: RUnit, pracma, roxygen2
 LinkingTo: Rcpp, oneMKL, RcppEigen
 SystemRequirements: GNU make
 License: GPL-3

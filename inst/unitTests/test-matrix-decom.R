@@ -2,42 +2,48 @@ library(oneMKL.MatrixCal)
 hilbert <- function(n) { i <- 1:n; 1 / outer(i - 1, i, "+") }
 
 testMatChol <- function() {
-  m <- matrix(c(5,1,1,3),2,2)
-  checkEquals(fMatChol(m), chol(m))
+  X <- hilbert(9)
+  checkEquals(fMatChol(X), chol(X))
+}
+
+testMatQr <- function() {
+  X <- hilbert(16)
+  qrRes <- fMatQR(X)
+  checkEquals(qrRes$Q %*% qrRes$R, X)
+
+  qrRes2 <- fMatQR(X, TRUE)
+  checkEquals(qrRes2$Q %*% qrRes2$R %*% fMatInv(qrRes2$P), X)
 }
 
 testMatSvd <- function() {
   X <- hilbert(9)[, 1:6]
-  s <- fMatSvd(X)
+  s <- fMatSVD(X)
   D <- diag(as.vector(s$d))
-  checkEquals(s$u[ , 1:6] %*% D %*% t(s$v), X)
-  checkEquals(t(s$u[ , 1:6]) %*% X %*% s$v, D)
+  checkEquals(s$U[ , 1:6] %*% D %*% t(s$V), X)
+  checkEquals(t(s$U[ , 1:6]) %*% X %*% s$V, D)
 }
 
 testMatEigen <- function() {
-  X <- cbind(c(1,-1), c(-1,1))
+  X <- cbind(c(1, -1), c(-1, 1))
   eigenResVanillaR <- eigen(X)
-  eigenRes <- fMatEigen(X)
-  eigenVals <- Re(eigenRes$values)
-  Z1 <- abs(Re(eigenRes$vectors) %*% eigenResVanillaR$vectors)
+  eigenRes <- fMatEigen(X, TRUE)
+  Z1 <- abs(eigenRes$vectors %*% eigenResVanillaR$vectors)
   checkEquals(
-    as.vector(eigenVals[order(eigenVals)]),
+    as.vector(eigenRes$values[order(eigenRes$values)]),
     eigenResVanillaR$values[order(eigenResVanillaR$values)]
   )
   checkTrue(all.equal(matrix(1, 2, 2) - diag(1, 2, 2), Z1) || all.equal(Z1, diag(1, 2, 2)))
 
   X <- hilbert(16)
-  eigenRes <- fMatEigen(X)
-  checkTrue(all(abs(Re(eigenRes$vectors %*% diag(eigenRes$values) %*% solve(eigenRes$vectors)) - X) < 1e-6))
+  eigenRes1 <- fMatEigen(X)
+  checkTrue(all(abs(Re(eigenRes1$vectors %*% diag(eigenRes1$values) %*% solve(eigenRes1$vectors)) - X) < 1e-6))
+
+  eigenRes2 <- fMatEigen(X, TRUE)
+  checkTrue(all(abs(eigenRes2$vectors %*% diag(eigenRes2$values) %*% fMatInv(eigenRes2$vectors) - X) < 1e-6))
 }
 
-testOtherDecom <- function() {
-  # fMatLu
-  X <- matrix(rnorm(9), 3, 3)
-  luRes <- fMatLu(X)
-  checkEquals(solve(luRes$P) %*% luRes$L %*% luRes$U, X)
-
-  # fMatQr
-  qrRes <- fMatQr(X)
-  checkEquals(qrRes$Q %*% qrRes$R, X)
+testMatLu <- function() {
+  X <- hilbert(16)
+  luRes <- fMatLU(X)
+  checkEquals(fMatInv(luRes$P) %*% luRes$L %*% luRes$U, X)
 }
