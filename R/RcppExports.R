@@ -3,21 +3,23 @@
 
 #' Functions to do the decomposition by leveraging Intel MKL through RcppEigen
 #'
-#' `fMatChol` performs the Cholesky decomposition of the matrix `X`,
+#' \describe{
+#' \item{\strong{fMatChol}}{This function performs the Cholesky decomposition of the matrix `X`,
 #'  i.e., `X = L L^T`, where `L` is a lower triangular matrix with real
-#'  and positive diagonal entries, and `L^T` is the transpose of `L`.
-#' `fMatLU` performs the LU decomposition of the matrix `X`, namely, `X = PLU`,
+#'  and positive diagonal entries, and `L^T` is the transpose of `L`.}
+#' \item{\strong{fMatLU}}{This function performs the LU decomposition of the matrix `X`, namely, `X = PLU`,
 #'  where `L` is a lower triangular matrix with unit diagonal entries,
-#'  `U` is an upper triangular matrix and `P` is a permutation matrix.
-#' `fMatQR` performs the QR decomposition of the matrix `X`, i.e., `X = QR`,
-#'  where `Q` is an orthogonal matrix and `R` is an upper triangular matrix.
-#' `fMatSVD` performs the singular value decomposition (SVD) of the matrix `X`, namely, `X = U D V^T`,
-#'  where `U` and `V` are orthogonal matrices and `D` is a diagonal matrix.
-#' `fMatEigen` performs the eigenvalue decomposition of the matrix `X`,
+#'  `U` is an upper triangular matrix and `P` is a permutation matrix.}
+#' \item{\strong{fMatQR}}{This function performs the QR decomposition of the matrix `X`, i.e., `X = QR`,
+#'  where `Q` is an orthogonal matrix and `R` is an upper triangular matrix.}
+#' \item{\strong{fMatSVD}}{This function performs the singular value decomposition (SVD) of the matrix `X`, namely, `X = U D V^T`,
+#'  where `U` and `V` are orthogonal matrices and `D` is a diagonal matrix.}
+#' \item{\strong{fMatEigen}}{This function performs the eigenvalue decomposition of the matrix `X`,
 #'  i.e., `X = V D V^(-1)`, where 'V' is a matrix whose columns are the eigenvectors of 'X',
-#'  and 'D' is a diagonal matrix whose entries are the corresponding eigenvalues of 'X'.
-#'  `fMatEigen` returns a list of objects with two elements:  'values' and 'vectors',
-#'  which are respectively the eigenvalues and eigenvectors of 'X'.
+#'  and 'D' is a diagonal matrix whose entries are the corresponding eigenvalues of 'X'.}
+#' \item{\strong{fMatEigen}}{This function returns a list of objects with two elements:  'values' and 'vectors',
+#'  which are respectively the eigenvalues and eigenvectors of 'X'.}
+#' }
 #'
 #' @param X The input matrix.
 #' @rdname fast_matrix_decomposition
@@ -31,7 +33,7 @@
 #' luRes <- fMatLU(X)
 #' solve(luRes$P) %*% luRes$L %*% luRes$U # X = P^(-1) L U
 #'
-#' qrRes <- fMatQQ(X)
+#' qrRes <- fMatQR(X)
 #' qrRes$Q %*% qrRes$R # X = Q R
 #'
 #' hilbert <- function(n) { i <- 1:n; 1 / outer(i - 1, i, "+") }
@@ -49,7 +51,6 @@ fMatChol <- function(X) {
     .Call('_oneMKL_MatrixCal_fMatChol', PACKAGE = 'oneMKL.MatrixCal', X)
 }
 
-#' @param permutation_matrix Whether the permutation matrix is outputted.
 #' @name fast_matrix_decomposition
 #' @export
 fMatLU <- function(X) {
@@ -62,7 +63,6 @@ fMatQR <- function(X) {
     .Call('_oneMKL_MatrixCal_fMatQR', PACKAGE = 'oneMKL.MatrixCal', X)
 }
 
-#' @param economical Whether to use economical SVD.
 #' @name fast_matrix_decomposition
 #' @export
 fMatSVD <- function(X) {
@@ -77,26 +77,29 @@ fMatEigen <- function(X) {
 
 #' Functions that use oneMKL for fast matrix calculations through RcppEigen
 #'
-#' `fMatProd` returns the multiplication of matrices `X` and `Y`, i.e., `XY`.
-#' `fMatTransProd` returns the product of the transpose of the matrix `X` and the matrix `Y`, i.e., `X^T Y`.
-#' `fMatInv` returns the inverse of the matrix `X`, i.e., `X^(-1)`.
+#' \describe{
+#' \item{\strong{fMatProd}}{This function returns the multiplication of matrices `X` and `Y`, i.e., `XY`.}
+#' \item{\strong{fMatTransProd}}{This function returns the product of the transpose of the matrix `X`
+#'  and the matrix `Y`, i.e., `X^T Y`.}
+#' \item{\strong{fMatInv}}{This function returns the inverse of the matrix `X`, i.e., `X^(-1)`.
 #'  If the matrix `X` is symmetric positive definite, Cholesky decomposition
-#'  will be used for better computational performance.
-#' `fMatSolve` returns the solution of a linear system `AX=b`.
+#'  will be used for better computational performance.}
+#' \item{\strong{fMatSolve}}{This function returns the solution of a linear system `AX=b`.
 #'  If the matrix `X` is symmetric positive definite, Cholesky decomposition
 #'  will be used for better computational performance.
 #'  If the matrix `X` is invertible, the LU decomposition
-#'  will be used for better computational performance.
-#' `fMatAdd` returns the sum of matrices `X` and `Y`, i.e., `X + Y`
-#' `fMatSubtract` returns the result of the matrix `X` minus the matrix `Y`, namely, `X - Y`.
-#' `fMatDet` returns the determinant of the matrix `X`.
-#' `fMatRank` returns the rank of the matrix `X`.
-#' `fMatRowSum` returns the sum of each row.
-#' `fMatColSum` returns the sum of each column.
-#' `fMatRowMin` returns the minimum of each row.
-#' `fMatRowMax` returns the maximum of each row.
-#' `fMatColMin` returns the minimum of each column.
-#' `fMatColMax` returns the maximum of each column.
+#'  will be used for better computational performance.}
+#' \item{\strong{fMatAdd}}{This function returns the sum of matrices `X` and `Y`, i.e., `X + Y`}
+#' \item{\strong{fMatSubtract}}{This function returns the result of the matrix `X` minus the matrix `Y`, namely, `X - Y`.}
+#' \item{\strong{fMatDet}}{This function returns the determinant of the matrix `X`.}
+#' \item{\strong{fMatRank}}{This function returns the rank of the matrix `X`.}
+#' \item{\strong{fMatRowSum}}{This function returns the sum of each row.}
+#' \item{\strong{fMatColSum}}{This function returns the sum of each column.}
+#' \item{\strong{fMatRowMin}}{This function returns the minimum of each row.}
+#' \item{\strong{fMatRowMax}}{This function returns the maximum of each row.}
+#' \item{\strong{fMatColMin}}{This function returns the minimum of each column.}
+#' \item{\strong{fMatColMax}}{This function returns the maximum of each column.}
+#' }
 #'
 #' @param X,Y The input matrices 'X' and 'Y'.
 #' @return The corresponding results.

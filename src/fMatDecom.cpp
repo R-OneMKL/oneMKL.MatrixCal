@@ -21,21 +21,23 @@
 
 //' Functions to do the decomposition by leveraging Intel MKL through RcppEigen
 //'
-//' `fMatChol` performs the Cholesky decomposition of the matrix `X`,
+//' \describe{
+//' \item{\strong{fMatChol}}{This function performs the Cholesky decomposition of the matrix `X`,
 //'  i.e., `X = L L^T`, where `L` is a lower triangular matrix with real
-//'  and positive diagonal entries, and `L^T` is the transpose of `L`.
-//' `fMatLU` performs the LU decomposition of the matrix `X`, namely, `X = PLU`,
+//'  and positive diagonal entries, and `L^T` is the transpose of `L`.}
+//' \item{\strong{fMatLU}}{This function performs the LU decomposition of the matrix `X`, namely, `X = PLU`,
 //'  where `L` is a lower triangular matrix with unit diagonal entries,
-//'  `U` is an upper triangular matrix and `P` is a permutation matrix.
-//' `fMatQR` performs the QR decomposition of the matrix `X`, i.e., `X = QR`,
-//'  where `Q` is an orthogonal matrix and `R` is an upper triangular matrix.
-//' `fMatSVD` performs the singular value decomposition (SVD) of the matrix `X`, namely, `X = U D V^T`,
-//'  where `U` and `V` are orthogonal matrices and `D` is a diagonal matrix.
-//' `fMatEigen` performs the eigenvalue decomposition of the matrix `X`,
+//'  `U` is an upper triangular matrix and `P` is a permutation matrix.}
+//' \item{\strong{fMatQR}}{This function performs the QR decomposition of the matrix `X`, i.e., `X = QR`,
+//'  where `Q` is an orthogonal matrix and `R` is an upper triangular matrix.}
+//' \item{\strong{fMatSVD}}{This function performs the singular value decomposition (SVD) of the matrix `X`, namely, `X = U D V^T`,
+//'  where `U` and `V` are orthogonal matrices and `D` is a diagonal matrix.}
+//' \item{\strong{fMatEigen}}{This function performs the eigenvalue decomposition of the matrix `X`,
 //'  i.e., `X = V D V^(-1)`, where 'V' is a matrix whose columns are the eigenvectors of 'X',
-//'  and 'D' is a diagonal matrix whose entries are the corresponding eigenvalues of 'X'.
-//'  `fMatEigen` returns a list of objects with two elements:  'values' and 'vectors',
-//'  which are respectively the eigenvalues and eigenvectors of 'X'.
+//'  and 'D' is a diagonal matrix whose entries are the corresponding eigenvalues of 'X'.}
+//' \item{\strong{fMatEigen}}{This function returns a list of objects with two elements:  'values' and 'vectors',
+//'  which are respectively the eigenvalues and eigenvectors of 'X'.}
+//' }
 //'
 //' @param X The input matrix.
 //' @rdname fast_matrix_decomposition
@@ -49,7 +51,7 @@
 //' luRes <- fMatLU(X)
 //' solve(luRes$P) %*% luRes$L %*% luRes$U # X = P^(-1) L U
 //'
-//' qrRes <- fMatQQ(X)
+//' qrRes <- fMatQR(X)
 //' qrRes$Q %*% qrRes$R # X = Q R
 //'
 //' hilbert <- function(n) { i <- 1:n; 1 / outer(i - 1, i, "+") }
@@ -68,7 +70,6 @@ Eigen::MatrixXd fMatChol(const Eigen::Map<Eigen::MatrixXd> X){
   return X.llt().matrixU();
 }
 
-//' @param permutation_matrix Whether the permutation matrix is outputted.
 //' @name fast_matrix_decomposition
 //' @export
 // [[Rcpp::export]]
@@ -98,7 +99,6 @@ Rcpp::List fMatQR(const Eigen::Map<Eigen::MatrixXd> X){
   );
 }
 
-//' @param economical Whether to use economical SVD.
 //' @name fast_matrix_decomposition
 //' @export
 // [[Rcpp::export]]

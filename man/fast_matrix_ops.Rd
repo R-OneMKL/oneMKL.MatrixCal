@@ -62,26 +62,29 @@ Better computational performance is expected if the matrix is invertible.}
 The corresponding results.
 }
 \description{
-`fMatProd` returns the multiplication of matrices `X` and `Y`, i.e., `XY`.
-`fMatTransProd` returns the product of the transpose of the matrix `X` and the matrix `Y`, i.e., `X^T Y`.
-`fMatInv` returns the inverse of the matrix `X`, i.e., `X^(-1)`.
+\describe{
+\item{\strong{fMatProd}}{This function returns the multiplication of matrices `X` and `Y`, i.e., `XY`.}
+\item{\strong{fMatTransProd}}{This function returns the product of the transpose of the matrix `X`
+ and the matrix `Y`, i.e., `X^T Y`.}
+\item{\strong{fMatInv}}{This function returns the inverse of the matrix `X`, i.e., `X^(-1)`.
  If the matrix `X` is symmetric positive definite, Cholesky decomposition
- will be used for better computational performance.
-`fMatSolve` returns the solution of a linear system `AX=b`.
+ will be used for better computational performance.}
+\item{\strong{fMatSolve}}{This function returns the solution of a linear system `AX=b`.
  If the matrix `X` is symmetric positive definite, Cholesky decomposition
  will be used for better computational performance.
  If the matrix `X` is invertible, the LU decomposition
- will be used for better computational performance.
-`fMatAdd` returns the sum of matrices `X` and `Y`, i.e., `X + Y`
-`fMatSubtract` returns the result of the matrix `X` minus the matrix `Y`, namely, `X - Y`.
-`fMatDet` returns the determinant of the matrix `X`.
-`fMatRank` returns the rank of the matrix `X`.
-`fMatRowSum` returns the sum of each row.
-`fMatColSum` returns the sum of each column.
-`fMatRowMin` returns the minimum of each row.
-`fMatRowMax` returns the maximum of each row.
-`fMatColMin` returns the minimum of each column.
-`fMatColMax` returns the maximum of each column.
+ will be used for better computational performance.}
+\item{\strong{fMatAdd}}{This function returns the sum of matrices `X` and `Y`, i.e., `X + Y`}
+\item{\strong{fMatSubtract}}{This function returns the result of the matrix `X` minus the matrix `Y`, namely, `X - Y`.}
+\item{\strong{fMatDet}}{This function returns the determinant of the matrix `X`.}
+\item{\strong{fMatRank}}{This function returns the rank of the matrix `X`.}
+\item{\strong{fMatRowSum}}{This function returns the sum of each row.}
+\item{\strong{fMatColSum}}{This function returns the sum of each column.}
+\item{\strong{fMatRowMin}}{This function returns the minimum of each row.}
+\item{\strong{fMatRowMax}}{This function returns the maximum of each row.}
+\item{\strong{fMatColMin}}{This function returns the minimum of each column.}
+\item{\strong{fMatColMax}}{This function returns the maximum of each column.}
+}
 }
 \examples{
 x <- matrix(rnorm(1e4), 100)
