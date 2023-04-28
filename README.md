@@ -21,12 +21,7 @@ which can benefit a wide range of users.
 2. You can install this package through our `drat` repository:
 
 ```r
-# for Windows users (Because we don't provide the binary package of oneMKL)
-install.packages(c("oneMKL"), repos=c("https://cloud.r-project.org/", "https://R-OneMKL.github.io/drat"), type="source")
-install.packages(c("oneMKL.MatrixCal"), repos=c("https://cloud.r-project.org/", "https://R-OneMKL.github.io/drat"))
-
-# for Linux users
-install.packages(c("oneMKL", "oneMKL.MatrixCal"), repos=c("https://cloud.r-project.org/", "https://R-OneMKL.github.io/drat"))
+install.packages(c("oneMKL", "oneMKL.MatrixCal"), repos=c("https://cloud.r-project.org/", "https://R-OneMKL.github.io/drat"), type = "source")
 ```
 
 Or, to get this package from github:
@@ -36,7 +31,6 @@ Or, to get this package from github:
 remotes::install_github("R-OneMKL/oneMKL") # users must first install the "oneMKL" package to construct the connection between R and oneMKL
 remotes::install_github("R-OneMKL/oneMKL.MatrixCal")
 ```
-
 
 ### License
 

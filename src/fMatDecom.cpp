@@ -48,7 +48,7 @@
 //' @examples
 //' hilbert <- function(n) { i <- 1:n; 1 / outer(i - 1, i, "+") }
 //' # Cholesky decomposition
-//' X <- hilbert(16)
+//' X <- hilbert(9)
 //' fMatChol(X)
 //' all.equal(fMatChol(X), chol(X)) # It's the same to R
 //'
