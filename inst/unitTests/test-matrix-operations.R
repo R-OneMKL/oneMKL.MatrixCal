@@ -55,7 +55,7 @@ testMatInverse <- function() {
     x <- matrix(rnorm(3e3), 30, 100)
     beta <- matrix(rnorm(1e2), 100)
     y <- fMatProd(x, beta) + rnorm(30)
-    checkEquals(pracma::pinv(t(x) %*% x) %*% t(x) %*% y, fMatLeastSquare(x, y, TRUE, FALSE))
+    checkEquals(pracma::pinv(t(x) %*% x) %*% t(x) %*% y, fMatLeastSquare(x, y, is_X_full_rank = FALSE))
   } else {
     cat("R package 'pracma' cannot be loaded -- the least square for X which is not full-rank will be skipped.\n")
   }

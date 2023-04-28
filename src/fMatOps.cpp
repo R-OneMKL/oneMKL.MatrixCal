@@ -131,9 +131,9 @@ Eigen::MatrixXd fMatTransProd(
 }
 
 //' @param is_invertible A logical variable indicating whether the input matrix `X` is invertible.
-//'  Better computational performance is expected if the matrix is invertible.
+//'  Better computational performance is expected if the matrix is invertible for `fMatSolve`.
 //' @param is_sym_pd A logical variable indicating whether the input matrix `X` is symmetric positive definitive.
-//'  Better computational performance is expected if the matrix is symmetric positive definitive.
+//'  Better computational performance is expected if the matrix is symmetric positive definitive for `fMatSolve` and `fMatInv`.
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
@@ -171,16 +171,17 @@ Eigen::MatrixXd fMatPseudoInv(const Eigen::Map<Eigen::MatrixXd> X) {
   return X.completeOrthogonalDecomposition().pseudoInverse();
 }
 
-//' @param stable A logical variable indicating whether to use a more stable but slower algorithm.
+//' @param stable A logical variable indicating whether to use a more stable
+//'  but slower algorithm for `fMatLeastSquare`.
 //' @param is_X_full_rank A logical variable indicating whether the input matrix 'X' is full-rank.
-//'  If false, the pseudo inverse will be applied.
+//'  If false, the pseudo inverse will be applied for `fMatLeastSquare`.
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
 Eigen::MatrixXd fMatLeastSquare(
     const Eigen::Map<Eigen::MatrixXd> X,
     const Eigen::Map<Eigen::VectorXd> Y,
-    bool stable = true,
+    bool stable = false,
     bool is_X_full_rank = true
 ) {
   if (is_X_full_rank) {

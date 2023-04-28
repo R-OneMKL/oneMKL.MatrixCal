@@ -30,16 +30,16 @@
 //'  `U` is an upper triangular matrix and `P` is a permutation matrix.}
 //' \item{\strong{fMatQR}}{This function performs the QR decomposition of the matrix `X`, i.e., `X = QR`,
 //'  where `Q` is an orthogonal matrix and `R` is an upper triangular matrix.
-//'  If `with_permutation_matrix` = TRUE, it will output a permutation matrix `P` as well.
+//'  If `with_permutation_matrix` = TRUE, it returns a permutation matrix `P` as well.
 //'  The decomposition will be `XP = QR` which the algorithm is more stable than the one without a permutation matrix.}
-//' \item{\strong{fMatSVD}}{This function performs the singular value decomposition (SVD) of the matrix `X`, namely, `X = U D V^T`,
-//'  where `U` and `V` are orthogonal matrices and `D` is a diagonal matrix.}
 //' \item{\strong{fMatEigen}}{This function performs the eigenvalue decomposition of the matrix `X`,
 //'  i.e., `X = V D V^(-1)`, where 'V' is a matrix whose columns are the eigenvectors of 'X',
-//'  and 'D' is a diagonal matrix whose entries are the corresponding eigenvalues of 'X'.}
-//' \item{\strong{fMatEigen}}{This function returns a list of objects with two elements:  'values' and 'vectors',
-//'  which are respectively the eigenvalues and eigenvectors of 'X'.
-//'  If `is_X_symmetric` = TRUE, only the real part will be outputted.}
+//'  and 'D' is a diagonal matrix whose entries are the corresponding eigenvalues of 'X'.
+//'  This function returns a list of objects with two elements: `values` and `vectors`,
+//'  which are respectively the eigenvalues and eigenvectors of `X`.
+//'  If `is_X_symmetric` = TRUE, only the real part will be returned.}
+//' \item{\strong{fMatSVD}}{This function performs the singular value decomposition (SVD) of the matrix `X`, namely, `X = U D V^T`,
+//'  where `U` and `V` are orthogonal matrices and `D` is a diagonal matrix.}
 //' }
 //'
 //' @param X The input matrix.
@@ -101,7 +101,7 @@ Rcpp::List fMatLU(const Eigen::Map<Eigen::MatrixXd> X){
 }
 
 //' @param with_permutation_matrix A logical variable indicating whether
-//' the QR decomposition is performed with a permutation matrix `P` outputted.
+//' the QR decomposition is performed with a permutation matrix `P` returned.
 //' @name fast_matrix_decomposition
 //' @export
 // [[Rcpp::export]]
@@ -126,7 +126,7 @@ Rcpp::List fMatQR(const Eigen::Map<Eigen::MatrixXd> X, bool with_permutation_mat
 }
 
 //' @param is_X_symmetric A logical variable indicating whether the input matrix `X` is symmetric.
-//'  Better computational performance is expected if the matrix is symmetric.
+//'  If true, `fMatEigen` returns a real matrix. Otherwise, it returns a complex matrix.
 //' @name fast_matrix_decomposition
 //' @export
 // [[Rcpp::export]]

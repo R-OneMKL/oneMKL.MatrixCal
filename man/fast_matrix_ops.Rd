@@ -31,7 +31,7 @@ fMatInv(X, is_sym_pd = FALSE)
 
 fMatPseudoInv(X)
 
-fMatLeastSquare(X, Y, stable = TRUE, is_X_full_rank = TRUE)
+fMatLeastSquare(X, Y, stable = FALSE, is_X_full_rank = TRUE)
 
 fMatAdd(X, Y)
 
@@ -62,15 +62,16 @@ fMatRCond(X)
 Better computational performance is expected if the matrix is symmetric.}
 
 \item{is_sym_pd}{A logical variable indicating whether the input matrix `X` is symmetric positive definitive.
-Better computational performance is expected if the matrix is symmetric positive definitive.}
+Better computational performance is expected if the matrix is symmetric positive definitive for `fMatSolve` and `fMatInv`.}
 
 \item{is_invertible}{A logical variable indicating whether the input matrix `X` is invertible.
-Better computational performance is expected if the matrix is invertible.}
+Better computational performance is expected if the matrix is invertible for `fMatSolve`.}
 
-\item{stable}{A logical variable indicating whether to use a more stable but slower algorithm.}
+\item{stable}{A logical variable indicating whether to use a more stable
+but slower algorithm for `fMatLeastSquare`.}
 
 \item{is_X_full_rank}{A logical variable indicating whether the input matrix 'X' is full-rank.
-If false, the pseudo inverse will be applied.}
+If false, the pseudo inverse will be applied for `fMatLeastSquare`.}
 }
 \value{
 The corresponding results.

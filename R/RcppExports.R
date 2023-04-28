@@ -12,16 +12,16 @@
 #'  `U` is an upper triangular matrix and `P` is a permutation matrix.}
 #' \item{\strong{fMatQR}}{This function performs the QR decomposition of the matrix `X`, i.e., `X = QR`,
 #'  where `Q` is an orthogonal matrix and `R` is an upper triangular matrix.
-#'  If `with_permutation_matrix` = TRUE, it will output a permutation matrix `P` as well.
+#'  If `with_permutation_matrix` = TRUE, it returns a permutation matrix `P` as well.
 #'  The decomposition will be `XP = QR` which the algorithm is more stable than the one without a permutation matrix.}
-#' \item{\strong{fMatSVD}}{This function performs the singular value decomposition (SVD) of the matrix `X`, namely, `X = U D V^T`,
-#'  where `U` and `V` are orthogonal matrices and `D` is a diagonal matrix.}
 #' \item{\strong{fMatEigen}}{This function performs the eigenvalue decomposition of the matrix `X`,
 #'  i.e., `X = V D V^(-1)`, where 'V' is a matrix whose columns are the eigenvectors of 'X',
-#'  and 'D' is a diagonal matrix whose entries are the corresponding eigenvalues of 'X'.}
-#' \item{\strong{fMatEigen}}{This function returns a list of objects with two elements:  'values' and 'vectors',
-#'  which are respectively the eigenvalues and eigenvectors of 'X'.
-#'  If `is_X_symmetric` = TRUE, only the real part will be outputted.}
+#'  and 'D' is a diagonal matrix whose entries are the corresponding eigenvalues of 'X'.
+#'  This function returns a list of objects with two elements: `values` and `vectors`,
+#'  which are respectively the eigenvalues and eigenvectors of `X`.
+#'  If `is_X_symmetric` = TRUE, only the real part will be returned.}
+#' \item{\strong{fMatSVD}}{This function performs the singular value decomposition (SVD) of the matrix `X`, namely, `X = U D V^T`,
+#'  where `U` and `V` are orthogonal matrices and `D` is a diagonal matrix.}
 #' }
 #'
 #' @param X The input matrix.
@@ -71,7 +71,7 @@ fMatLU <- function(X) {
 }
 
 #' @param with_permutation_matrix A logical variable indicating whether
-#' the QR decomposition is performed with a permutation matrix `P` outputted.
+#' the QR decomposition is performed with a permutation matrix `P` returned.
 #' @name fast_matrix_decomposition
 #' @export
 fMatQR <- function(X, with_permutation_matrix = FALSE) {
@@ -79,7 +79,7 @@ fMatQR <- function(X, with_permutation_matrix = FALSE) {
 }
 
 #' @param is_X_symmetric A logical variable indicating whether the input matrix `X` is symmetric.
-#'  Better computational performance is expected if the matrix is symmetric.
+#'  If true, `fMatEigen` returns a real matrix. Otherwise, it returns a complex matrix.
 #' @name fast_matrix_decomposition
 #' @export
 fMatEigen <- function(X, is_X_symmetric = FALSE) {
@@ -164,9 +164,9 @@ fMatTransProd <- function(X, Y, is_X_symmetric = FALSE) {
 }
 
 #' @param is_invertible A logical variable indicating whether the input matrix `X` is invertible.
-#'  Better computational performance is expected if the matrix is invertible.
+#'  Better computational performance is expected if the matrix is invertible for `fMatSolve`.
 #' @param is_sym_pd A logical variable indicating whether the input matrix `X` is symmetric positive definitive.
-#'  Better computational performance is expected if the matrix is symmetric positive definitive.
+#'  Better computational performance is expected if the matrix is symmetric positive definitive for `fMatSolve` and `fMatInv`.
 #' @name fast_matrix_ops
 #' @export
 fMatSolve <- function(X, Y, is_sym_pd = FALSE, is_invertible = FALSE) {
@@ -185,12 +185,13 @@ fMatPseudoInv <- function(X) {
     .Call('_oneMKL_MatrixCal_fMatPseudoInv', PACKAGE = 'oneMKL.MatrixCal', X)
 }
 
-#' @param stable A logical variable indicating whether to use a more stable but slower algorithm.
+#' @param stable A logical variable indicating whether to use a more stable
+#'  but slower algorithm for `fMatLeastSquare`.
 #' @param is_X_full_rank A logical variable indicating whether the input matrix 'X' is full-rank.
-#'  If false, the pseudo inverse will be applied.
+#'  If false, the pseudo inverse will be applied for `fMatLeastSquare`.
 #' @name fast_matrix_ops
 #' @export
-fMatLeastSquare <- function(X, Y, stable = TRUE, is_X_full_rank = TRUE) {
+fMatLeastSquare <- function(X, Y, stable = FALSE, is_X_full_rank = TRUE) {
     .Call('_oneMKL_MatrixCal_fMatLeastSquare', PACKAGE = 'oneMKL.MatrixCal', X, Y, stable, is_X_full_rank)
 }
 
