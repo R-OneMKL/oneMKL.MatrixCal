@@ -39,9 +39,8 @@
 #' hilbert <- function(n) { i <- 1:n; 1 / outer(i - 1, i, "+") }
 #' X <- hilbert(9)[, 1:6]
 #' (svdRes <- fMatSVD(X))
-#' D <- diag(as.vector(svdRes$d))
-#' svdRes$u[ , 1:6] %*% D %*% t(svdRes$v) #  X = U D V'
-#' t(svdRes$u[ , 1:6]) %*% X %*% svdRes$v #  D = U' X V
+#' svdRes$U[ , 1:6] %*% diag(svdRes$d) %*% t(svdRes$V) #  X = U D V'
+#' t(svdRes$U[ , 1:6]) %*% X %*% svdRes$V #  D = U' X V
 #'
 #' X <- hilbert(9)
 #' eigenRes <- fMatEigen(X)
