@@ -16,6 +16,7 @@
 // along with oneMKL. If not, see <http://www.gnu.org/licenses/>.
 
 #include <oneMKL.h>
+#include "utils.h"
 
 // [[Rcpp::depends(oneMKL)]]
 
@@ -25,7 +26,7 @@
 //' \item{\strong{fMatProd}}{This function returns the multiplication of matrices `X` and `Y`, i.e., `XY`.}
 //' \item{\strong{fMatTransProd}}{This function returns the product of the transpose of the matrix `X`
 //'  and the matrix `Y`, i.e., `X^T Y`.}
-//' \item{\strong{fMatSolve}}{This function returns the solution of a linear system `AX=b`.
+//' \item{\strong{fMatSolve}}{This function returns the solution of a linear system `AX=Y`.
 //'  If the matrix `X` is symmetric positive definite, Cholesky decomposition
 //'  will be used for better computational performance.
 //'  If the matrix `X` is invertible, the LU decomposition
@@ -47,6 +48,7 @@
 //' \item{\strong{fMatRowMax}}{This function returns the maximum of each row.}
 //' \item{\strong{fMatColMin}}{This function returns the minimum of each column.}
 //' \item{\strong{fMatColMax}}{This function returns the maximum of each column.}
+//' \item{\strong{fMatSumDiffSquared}}{The function returns the result of square of `X` minus `Y`, i.e., `(X-Y)^2`, where `X` and `Y` are matrices.}
 //' }
 //'
 //' @param X,Y The input matrices 'X' and 'Y'.
@@ -81,21 +83,20 @@
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatProd(
-    const Eigen::Map<Eigen::MatrixXd> X,
-    Rcpp::NumericMatrix Y,
-    bool is_X_symmetric = false
-) {
-  if (Y.ncol() == 1) {
+Eigen::MatrixXd fMatProd(SEXP Xin, SEXP Yin, bool is_X_symmetric = false) {
+  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
+  int *ydims;
+  ydims = INTEGER(Rf_coerceVector(Rf_getAttrib(Yin, R_DimSymbol), INTSXP));
+  if (ydims[1] == 1) {
     // to have the best performance
-    Eigen::Map<Eigen::VectorXd> b(Rcpp::as<Eigen::Map<Eigen::VectorXd>>(Y));
+    Eigen::Map<Eigen::VectorXd> b = Rcpp::as<Eigen::Map<Eigen::VectorXd>>(cast_numeric(Yin));
     if (is_X_symmetric) {
       return X.selfadjointView<Eigen::Lower>() * b;
     } else {
       return X * b;
     }
   } else {
-    Eigen::Map<Eigen::MatrixXd> Z(Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(Y));
+    Eigen::Map<Eigen::MatrixXd> Z = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Yin));
     if (is_X_symmetric) {
       return X.selfadjointView<Eigen::Lower>() * Z;
     } else {
@@ -107,21 +108,20 @@ Eigen::MatrixXd fMatProd(
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatTransProd(
-    const Eigen::Map<Eigen::MatrixXd> X,
-    Rcpp::NumericMatrix Y,
-    bool is_X_symmetric = false
-) {
-  if (Y.cols() == 1) {
-    // to have best performance
-    Eigen::Map<Eigen::VectorXd> b(Rcpp::as<Eigen::Map<Eigen::VectorXd>>(Y));
+Eigen::MatrixXd fMatTransProd(SEXP Xin, SEXP Yin, bool is_X_symmetric = false) {
+  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
+  int *ydims;
+  ydims = INTEGER(Rf_coerceVector(Rf_getAttrib(Yin, R_DimSymbol), INTSXP));
+  if (ydims[1] == 1) {
+    // to have the best performance
+    Eigen::Map<Eigen::VectorXd> b = Rcpp::as<Eigen::Map<Eigen::VectorXd>>(cast_numeric(Yin));
     if (is_X_symmetric) {
       return X.selfadjointView<Eigen::Lower>() * b;
     } else {
       return X.transpose() * b;
     }
   } else {
-    Eigen::Map<Eigen::MatrixXd> Z(Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(Y));
+    Eigen::Map<Eigen::MatrixXd> Z = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Yin));
     if (is_X_symmetric) {
       return X.selfadjointView<Eigen::Lower>() * Z;
     } else {
@@ -138,11 +138,12 @@ Eigen::MatrixXd fMatTransProd(
 //' @export
 // [[Rcpp::export]]
 Eigen::MatrixXd fMatSolve(
-    const Eigen::Map<Eigen::MatrixXd> X,
-    const Eigen::Map<Eigen::MatrixXd> Y,
+    SEXP Xin, SEXP Yin,
     bool is_sym_pd = false,
     bool is_invertible = false
 ) {
+  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
+  Eigen::Map<Eigen::MatrixXd> Y = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Yin));
   if (is_sym_pd) {
     return X.llt().solve(Y);
   } else if (is_invertible) {
@@ -155,7 +156,8 @@ Eigen::MatrixXd fMatSolve(
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatInv(const Eigen::Map<Eigen::MatrixXd> X, bool is_sym_pd = false) {
+Eigen::MatrixXd fMatInv(SEXP Xin, bool is_sym_pd = false) {
+  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
   if (is_sym_pd) {
     Eigen::MatrixXd I = Eigen::MatrixXd::Identity(X.rows(), X.cols());
     return X.llt().solve(I);
@@ -167,7 +169,8 @@ Eigen::MatrixXd fMatInv(const Eigen::Map<Eigen::MatrixXd> X, bool is_sym_pd = fa
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatPseudoInv(const Eigen::Map<Eigen::MatrixXd> X) {
+Eigen::MatrixXd fMatPseudoInv(SEXP Xin) {
+  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
   return X.completeOrthogonalDecomposition().pseudoInverse();
 }
 
@@ -198,76 +201,82 @@ Eigen::MatrixXd fMatLeastSquare(
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatAdd(
-    const Eigen::Map<Eigen::MatrixXd> X,
-    const Eigen::Map<Eigen::MatrixXd> Y
-) {
+Eigen::MatrixXd fMatAdd(SEXP Xin, SEXP Yin) {
+  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
+  Eigen::Map<Eigen::MatrixXd> Y = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Yin));
   return X + Y;
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatSubtract(
-    const Eigen::Map<Eigen::MatrixXd> X,
-    const Eigen::Map<Eigen::MatrixXd> Y
-) {
+Eigen::MatrixXd fMatSubtract(SEXP Xin, SEXP Yin) {
+  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
+  Eigen::Map<Eigen::MatrixXd> Y = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Yin));
   return X - Y;
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatRowSum(const Eigen::Map<Eigen::MatrixXd> X) {
+Eigen::MatrixXd fMatRowSum(SEXP Xin) {
+  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
   return X.rowwise().sum();
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatColSum(const Eigen::Map<Eigen::MatrixXd> X) {
+Eigen::MatrixXd fMatColSum(SEXP Xin) {
+  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
   return X.colwise().sum();
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatRowMin(const Eigen::Map<Eigen::MatrixXd> X) {
+Eigen::MatrixXd fMatRowMin(SEXP Xin) {
+  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
   return X.rowwise().minCoeff();
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatColMin(const Eigen::Map<Eigen::MatrixXd> X) {
+Eigen::MatrixXd fMatColMin(SEXP Xin) {
+  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
   return X.colwise().minCoeff();
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatRowMax(const Eigen::Map<Eigen::MatrixXd> X) {
+Eigen::MatrixXd fMatRowMax(SEXP Xin) {
+  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
   return X.rowwise().maxCoeff();
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatColMax(const Eigen::Map<Eigen::MatrixXd> X) {
+Eigen::MatrixXd fMatColMax(SEXP Xin) {
+  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
   return X.colwise().maxCoeff();
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-double fMatDet(const Eigen::Map<Eigen::MatrixXd> X) {
+double fMatDet(SEXP Xin) {
+  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
   return X.determinant();
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-double fMatRank(const Eigen::Map<Eigen::MatrixXd> X) {
+double fMatRank(SEXP Xin) {
+  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
   return X.colPivHouseholderQr().rank();
 }
 
@@ -275,6 +284,17 @@ double fMatRank(const Eigen::Map<Eigen::MatrixXd> X) {
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-double fMatRCond(const Eigen::Map<Eigen::MatrixXd> X) {
+double fMatRCond(SEXP Xin) {
+  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
   return X.partialPivLu().rcond();
 }
+
+//' @name fast_matrix_ops
+//' @export
+// [[Rcpp::export]]
+double fMatSumDiffSquared(SEXP Xin, SEXP Yin) {
+  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
+  Eigen::Map<Eigen::MatrixXd> Y = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Yin));
+  return (X-Y).pow(2).sum();
+}
+

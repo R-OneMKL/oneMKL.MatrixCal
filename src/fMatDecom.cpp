@@ -16,6 +16,7 @@
 // along with oneMKL. If not, see <http://www.gnu.org/licenses/>.
 
 #include <oneMKL.h>
+#include "utils.h"
 
 // [[Rcpp::depends(oneMKL)]]
 
@@ -79,14 +80,16 @@
 //' t(svdRes$U[ , 1:6]) %*% Z %*% svdRes$V #  D = U' Z V
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatChol(const Eigen::Map<Eigen::MatrixXd> X){
+Eigen::MatrixXd fMatChol(SEXP Xin){
+  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
   return X.llt().matrixU();
 }
 
 //' @name fast_matrix_decomposition
 //' @export
 // [[Rcpp::export]]
-Rcpp::List fMatLU(const Eigen::Map<Eigen::MatrixXd> X){
+Rcpp::List fMatLU(SEXP Xin){
+  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
   auto lu = X.partialPivLu();
   auto luMatrix = lu.matrixLU();
   Eigen::MatrixXd L = luMatrix.triangularView<Eigen::StrictlyLower>();
@@ -105,7 +108,8 @@ Rcpp::List fMatLU(const Eigen::Map<Eigen::MatrixXd> X){
 //' @name fast_matrix_decomposition
 //' @export
 // [[Rcpp::export]]
-Rcpp::List fMatQR(const Eigen::Map<Eigen::MatrixXd> X, bool with_permutation_matrix = false){
+Rcpp::List fMatQR(SEXP Xin, bool with_permutation_matrix = false){
+  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
   if (with_permutation_matrix) {
     auto pqr = X.colPivHouseholderQr();
     Eigen::MatrixXd Q = pqr.householderQ();
@@ -130,7 +134,8 @@ Rcpp::List fMatQR(const Eigen::Map<Eigen::MatrixXd> X, bool with_permutation_mat
 //' @name fast_matrix_decomposition
 //' @export
 // [[Rcpp::export]]
-Rcpp::List fMatEigen(const Eigen::Map<Eigen::MatrixXd> X, bool is_X_symmetric = false){
+Rcpp::List fMatEigen(SEXP Xin, bool is_X_symmetric = false){
+  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
   if (is_X_symmetric) {
     Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> es(X);
     return Rcpp::List::create(
@@ -147,7 +152,8 @@ Rcpp::List fMatEigen(const Eigen::Map<Eigen::MatrixXd> X, bool is_X_symmetric = 
 //' @name fast_matrix_decomposition
 //' @export
 // [[Rcpp::export]]
-Rcpp::List fMatSVD(const Eigen::Map<Eigen::MatrixXd> X){
+Rcpp::List fMatSVD(SEXP Xin){
+  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
   auto svd = X.jacobiSvd(Eigen::ComputeFullV | Eigen::ComputeFullU);
   return Rcpp::List::create(
     Rcpp::Named("d") = svd.singularValues(),

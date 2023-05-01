@@ -19,45 +19,46 @@
 \alias{fMatDet}
 \alias{fMatRank}
 \alias{fMatRCond}
+\alias{fMatSumDiffSquared}
 \title{Functions that use oneMKL for fast matrix calculations through RcppEigen}
 \usage{
-fMatProd(X, Y, is_X_symmetric = FALSE)
+fMatProd(Xin, Yin, is_X_symmetric = FALSE)
 
-fMatTransProd(X, Y, is_X_symmetric = FALSE)
+fMatTransProd(Xin, Yin, is_X_symmetric = FALSE)
 
-fMatSolve(X, Y, is_sym_pd = FALSE, is_invertible = FALSE)
+fMatSolve(Xin, Yin, is_sym_pd = FALSE, is_invertible = FALSE)
 
-fMatInv(X, is_sym_pd = FALSE)
+fMatInv(Xin, is_sym_pd = FALSE)
 
-fMatPseudoInv(X)
+fMatPseudoInv(Xin)
 
 fMatLeastSquare(X, Y, stable = FALSE, is_X_full_rank = TRUE)
 
-fMatAdd(X, Y)
+fMatAdd(Xin, Yin)
 
-fMatSubtract(X, Y)
+fMatSubtract(Xin, Yin)
 
-fMatRowSum(X)
+fMatRowSum(Xin)
 
-fMatColSum(X)
+fMatColSum(Xin)
 
-fMatRowMin(X)
+fMatRowMin(Xin)
 
-fMatColMin(X)
+fMatColMin(Xin)
 
-fMatRowMax(X)
+fMatRowMax(Xin)
 
-fMatColMax(X)
+fMatColMax(Xin)
 
-fMatDet(X)
+fMatDet(Xin)
 
-fMatRank(X)
+fMatRank(Xin)
 
-fMatRCond(X)
+fMatRCond(Xin)
+
+fMatSumDiffSquared(Xin, Yin)
 }
 \arguments{
-\item{X, Y}{The input matrices 'X' and 'Y'.}
-
 \item{is_X_symmetric}{A logical variable indicating whether the input matrix `X` is symmetric.
 Better computational performance is expected if the matrix is symmetric.}
 
@@ -66,6 +67,8 @@ Better computational performance is expected if the matrix is symmetric positive
 
 \item{is_invertible}{A logical variable indicating whether the input matrix `X` is invertible.
 Better computational performance is expected if the matrix is invertible for `fMatSolve`.}
+
+\item{X, Y}{The input matrices 'X' and 'Y'.}
 
 \item{stable}{A logical variable indicating whether to use a more stable
 but slower algorithm for `fMatLeastSquare`.}
@@ -81,7 +84,7 @@ The corresponding results.
 \item{\strong{fMatProd}}{This function returns the multiplication of matrices `X` and `Y`, i.e., `XY`.}
 \item{\strong{fMatTransProd}}{This function returns the product of the transpose of the matrix `X`
  and the matrix `Y`, i.e., `X^T Y`.}
-\item{\strong{fMatSolve}}{This function returns the solution of a linear system `AX=b`.
+\item{\strong{fMatSolve}}{This function returns the solution of a linear system `AX=Y`.
  If the matrix `X` is symmetric positive definite, Cholesky decomposition
  will be used for better computational performance.
  If the matrix `X` is invertible, the LU decomposition
@@ -103,6 +106,7 @@ If `is_X_full_rank` = FALSE, the pseudo-inverse will be applied.}
 \item{\strong{fMatRowMax}}{This function returns the maximum of each row.}
 \item{\strong{fMatColMin}}{This function returns the minimum of each column.}
 \item{\strong{fMatColMax}}{This function returns the maximum of each column.}
+\item{\strong{fMatSumDiffSquared}}{The function returns the result of square of `X` minus `Y`, i.e., `(X-Y)^2`, where `X` and `Y` are matrices.}
 }
 }
 \examples{

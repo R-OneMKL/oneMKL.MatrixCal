@@ -9,24 +9,24 @@
 \alias{fMatSVD}
 \title{Functions to do the decomposition by leveraging Intel MKL through RcppEigen}
 \usage{
-fMatChol(X)
+fMatChol(Xin)
 
-fMatLU(X)
+fMatLU(Xin)
 
-fMatQR(X, with_permutation_matrix = FALSE)
+fMatQR(Xin, with_permutation_matrix = FALSE)
 
-fMatEigen(X, is_X_symmetric = FALSE)
+fMatEigen(Xin, is_X_symmetric = FALSE)
 
-fMatSVD(X)
+fMatSVD(Xin)
 }
 \arguments{
-\item{X}{The input matrix.}
-
 \item{with_permutation_matrix}{A logical variable indicating whether
 the QR decomposition is performed with a permutation matrix `P` returned.}
 
 \item{is_X_symmetric}{A logical variable indicating whether the input matrix `X` is symmetric.
 If true, `fMatEigen` returns a real matrix. Otherwise, it returns a complex matrix.}
+
+\item{X}{The input matrix.}
 }
 \description{
 \describe{
