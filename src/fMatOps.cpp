@@ -40,6 +40,8 @@
 //' If `is_X_full_rank` = FALSE, the pseudo-inverse will be applied.}
 //' \item{\strong{fMatAdd}}{This function returns the sum of matrices `X` and `Y`, i.e., `X + Y`}
 //' \item{\strong{fMatSubtract}}{This function returns the result of the matrix `X` minus the matrix `Y`, namely, `X - Y`.}
+//' \item{\strong{fMatElementWiseProduct}}{This function returns the result of the matrix `X` element-wisely product the matrix `Y`, i.e. [Xij * Yij] for all i, j.}
+//' \item{\strong{fMatElementWiseDivide}}{This function returns the result of the matrix `X` element-wisely divided by the matrix `Y`, i.e. [Xij / Yij] for all i, j.}
 //' \item{\strong{fMatDet}}{This function returns the determinant of the matrix `X`.}
 //' \item{\strong{fMatRank}}{This function returns the rank of the matrix `X`.}
 //' \item{\strong{fMatRowSum}}{This function returns the sum of each row.}
@@ -70,6 +72,9 @@
 //' fMatAdd(x, z) # x + z
 //' fMatSubtract(x, z) # x - z
 //'
+//' fMatElementWiseProduct(x, z) # x * z
+//' fMatElementWiseDivide(x, z) # x / z
+//'
 //' fMatDet(x)
 //' fMatRank(x)
 //'
@@ -83,24 +88,32 @@
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatProd(SEXP Xin, SEXP Yin, bool is_X_symmetric = false) {
-  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
+Eigen::MatrixXd fMatProd(SEXP X, SEXP Y, bool is_X_symmetric = false) {
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+
+  if (!(Rf_isMatrix(Y) && (TYPEOF(Y) == REALSXP || TYPEOF(Y) == INTSXP || TYPEOF(Y) == LGLSXP))) {
+    Rcpp::stop("'Y' must be a numeric matrix");
+  }
+
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
   int *ydims;
-  ydims = INTEGER(Rf_coerceVector(Rf_getAttrib(Yin, R_DimSymbol), INTSXP));
+  ydims = INTEGER(Rf_coerceVector(Rf_getAttrib(Y, R_DimSymbol), INTSXP));
   if (ydims[1] == 1) {
     // to have the best performance
-    Eigen::Map<Eigen::VectorXd> b = Rcpp::as<Eigen::Map<Eigen::VectorXd>>(cast_numeric(Yin));
+    Eigen::Map<Eigen::VectorXd> b = Rcpp::as<Eigen::Map<Eigen::VectorXd>>(cast_numeric(Y));
     if (is_X_symmetric) {
-      return X.selfadjointView<Eigen::Lower>() * b;
+      return XMtd.selfadjointView<Eigen::Lower>() * b;
     } else {
-      return X * b;
+      return XMtd * b;
     }
   } else {
-    Eigen::Map<Eigen::MatrixXd> Z = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Yin));
+    Eigen::Map<Eigen::MatrixXd> Z = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Y));
     if (is_X_symmetric) {
-      return X.selfadjointView<Eigen::Lower>() * Z;
+      return XMtd.selfadjointView<Eigen::Lower>() * Z;
     } else {
-      return X * Z;
+      return XMtd * Z;
     }
   }
 }
@@ -108,24 +121,32 @@ Eigen::MatrixXd fMatProd(SEXP Xin, SEXP Yin, bool is_X_symmetric = false) {
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatTransProd(SEXP Xin, SEXP Yin, bool is_X_symmetric = false) {
-  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
+Eigen::MatrixXd fMatTransProd(SEXP X, SEXP Y, bool is_X_symmetric = false) {
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+
+  if (!(Rf_isMatrix(Y) && (TYPEOF(Y) == REALSXP || TYPEOF(Y) == INTSXP || TYPEOF(Y) == LGLSXP))) {
+    Rcpp::stop("'Y' must be a numeric matrix");
+  }
+
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
   int *ydims;
-  ydims = INTEGER(Rf_coerceVector(Rf_getAttrib(Yin, R_DimSymbol), INTSXP));
+  ydims = INTEGER(Rf_coerceVector(Rf_getAttrib(Y, R_DimSymbol), INTSXP));
   if (ydims[1] == 1) {
     // to have the best performance
-    Eigen::Map<Eigen::VectorXd> b = Rcpp::as<Eigen::Map<Eigen::VectorXd>>(cast_numeric(Yin));
+    Eigen::Map<Eigen::VectorXd> b = Rcpp::as<Eigen::Map<Eigen::VectorXd>>(cast_numeric(Y));
     if (is_X_symmetric) {
-      return X.selfadjointView<Eigen::Lower>() * b;
+      return XMtd.selfadjointView<Eigen::Lower>() * b;
     } else {
-      return X.transpose() * b;
+      return XMtd.transpose() * b;
     }
   } else {
-    Eigen::Map<Eigen::MatrixXd> Z = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Yin));
+    Eigen::Map<Eigen::MatrixXd> Z = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Y));
     if (is_X_symmetric) {
-      return X.selfadjointView<Eigen::Lower>() * Z;
+      return XMtd.selfadjointView<Eigen::Lower>() * Z;
     } else {
-      return X.transpose() * Z;
+      return XMtd.transpose() * Z;
     }
   }
 }
@@ -138,40 +159,53 @@ Eigen::MatrixXd fMatTransProd(SEXP Xin, SEXP Yin, bool is_X_symmetric = false) {
 //' @export
 // [[Rcpp::export]]
 Eigen::MatrixXd fMatSolve(
-    SEXP Xin, SEXP Yin,
+    SEXP X, SEXP Y,
     bool is_sym_pd = false,
     bool is_invertible = false
 ) {
-  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
-  Eigen::Map<Eigen::MatrixXd> Y = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Yin));
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+
+  if (!(Rf_isMatrix(Y) && (TYPEOF(Y) == REALSXP || TYPEOF(Y) == INTSXP || TYPEOF(Y) == LGLSXP))) {
+    Rcpp::stop("'Y' must be a numeric matrix");
+  }
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
+  Eigen::Map<Eigen::MatrixXd> YMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Y));
   if (is_sym_pd) {
-    return X.llt().solve(Y);
+    return XMtd.llt().solve(YMtd);
   } else if (is_invertible) {
-    return X.partialPivLu().solve(Y);
+    return XMtd.partialPivLu().solve(YMtd);
   } else {
-    return X.householderQr().solve(Y);
+    return XMtd.householderQr().solve(YMtd);
   }
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatInv(SEXP Xin, bool is_sym_pd = false) {
-  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
+Eigen::MatrixXd fMatInv(SEXP X, bool is_sym_pd = false) {
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
   if (is_sym_pd) {
-    Eigen::MatrixXd I = Eigen::MatrixXd::Identity(X.rows(), X.cols());
-    return X.llt().solve(I);
+    Eigen::MatrixXd I = Eigen::MatrixXd::Identity(XMtd.rows(), XMtd.cols());
+    return XMtd.llt().solve(I);
   } else {
-    return X.inverse();
+    return XMtd.inverse();
   }
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatPseudoInv(SEXP Xin) {
-  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
-  return X.completeOrthogonalDecomposition().pseudoInverse();
+Eigen::MatrixXd fMatPseudoInv(SEXP X) {
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
+  return XMtd.completeOrthogonalDecomposition().pseudoInverse();
 }
 
 //' @param stable A logical variable indicating whether to use a more stable
@@ -182,119 +216,207 @@ Eigen::MatrixXd fMatPseudoInv(SEXP Xin) {
 //' @export
 // [[Rcpp::export]]
 Eigen::MatrixXd fMatLeastSquare(
-    const Eigen::Map<Eigen::MatrixXd> X,
-    const Eigen::Map<Eigen::VectorXd> Y,
+    SEXP X, SEXP Y,
     bool stable = false,
     bool is_X_full_rank = true
 ) {
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+
+  if (!(Rf_isMatrix(Y) && (TYPEOF(Y) == REALSXP || TYPEOF(Y) == INTSXP || TYPEOF(Y) == LGLSXP))) {
+    Rcpp::stop("'Y' must be a numeric matrix");
+  }
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
+  Eigen::Map<Eigen::MatrixXd> YMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Y));
   if (is_X_full_rank) {
     if (stable) {
-      return X.householderQr().solve(Y);
+      return XMtd.householderQr().solve(YMtd);
     } else {
-      return X.colPivHouseholderQr().solve(Y);
+      return XMtd.colPivHouseholderQr().solve(YMtd);
     }
   } else {
-    return X.completeOrthogonalDecomposition().solve(Y);
+    return XMtd.completeOrthogonalDecomposition().solve(YMtd);
   }
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatAdd(SEXP Xin, SEXP Yin) {
-  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
-  Eigen::Map<Eigen::MatrixXd> Y = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Yin));
-  return X + Y;
+Eigen::MatrixXd fMatAdd(SEXP X, SEXP Y) {
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+
+  if (!(Rf_isMatrix(Y) && (TYPEOF(Y) == REALSXP || TYPEOF(Y) == INTSXP || TYPEOF(Y) == LGLSXP))) {
+    Rcpp::stop("'Y' must be a numeric matrix");
+  }
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
+  Eigen::Map<Eigen::MatrixXd> YMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Y));
+  return XMtd + YMtd;
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatSubtract(SEXP Xin, SEXP Yin) {
-  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
-  Eigen::Map<Eigen::MatrixXd> Y = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Yin));
-  return X - Y;
+Eigen::MatrixXd fMatSubtract(SEXP X, SEXP Y) {
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+
+  if (!(Rf_isMatrix(Y) && (TYPEOF(Y) == REALSXP || TYPEOF(Y) == INTSXP || TYPEOF(Y) == LGLSXP))) {
+    Rcpp::stop("'Y' must be a numeric matrix");
+  }
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
+  Eigen::Map<Eigen::MatrixXd> YMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Y));
+  return XMtd - YMtd;
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatRowSum(SEXP Xin) {
-  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
-  return X.rowwise().sum();
+Eigen::MatrixXd fMatElementWiseProduct(SEXP X, SEXP Y) {
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+
+  if (!(Rf_isMatrix(Y) && (TYPEOF(Y) == REALSXP || TYPEOF(Y) == INTSXP || TYPEOF(Y) == LGLSXP))) {
+    Rcpp::stop("'Y' must be a numeric matrix");
+  }
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
+  Eigen::Map<Eigen::MatrixXd> YMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Y));
+  return XMtd.array() * YMtd.array();
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatColSum(SEXP Xin) {
-  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
-  return X.colwise().sum();
+Eigen::MatrixXd fMatElementWiseDivide(SEXP X, SEXP Y) {
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+
+  if (!(Rf_isMatrix(Y) && (TYPEOF(Y) == REALSXP || TYPEOF(Y) == INTSXP || TYPEOF(Y) == LGLSXP))) {
+    Rcpp::stop("'Y' must be a numeric matrix");
+  }
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
+  Eigen::Map<Eigen::MatrixXd> YMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Y));
+  return XMtd.array() / YMtd.array();
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatRowMin(SEXP Xin) {
-  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
-  return X.rowwise().minCoeff();
+Eigen::MatrixXd fMatRowSum(SEXP X) {
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
+  return XMtd.rowwise().sum();
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatColMin(SEXP Xin) {
-  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
-  return X.colwise().minCoeff();
+Eigen::MatrixXd fMatColSum(SEXP X) {
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
+  return XMtd.colwise().sum();
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatRowMax(SEXP Xin) {
-  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
-  return X.rowwise().maxCoeff();
+Eigen::MatrixXd fMatRowMin(SEXP X) {
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
+  return XMtd.rowwise().minCoeff();
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatColMax(SEXP Xin) {
-  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
-  return X.colwise().maxCoeff();
+Eigen::MatrixXd fMatColMin(SEXP X) {
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
+  return XMtd.colwise().minCoeff();
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-double fMatDet(SEXP Xin) {
-  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
-  return X.determinant();
+Eigen::MatrixXd fMatRowMax(SEXP X) {
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
+  return XMtd.rowwise().maxCoeff();
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-double fMatRank(SEXP Xin) {
-  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
-  return X.colPivHouseholderQr().rank();
+Eigen::MatrixXd fMatColMax(SEXP X) {
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
+  return XMtd.colwise().maxCoeff();
+}
+
+//' @name fast_matrix_ops
+//' @export
+// [[Rcpp::export]]
+double fMatDet(SEXP X) {
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
+  return XMtd.determinant();
+}
+
+//' @name fast_matrix_ops
+//' @export
+// [[Rcpp::export]]
+double fMatRank(SEXP X) {
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
+  return XMtd.colPivHouseholderQr().rank();
 }
 
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-double fMatRCond(SEXP Xin) {
-  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
-  return X.partialPivLu().rcond();
+double fMatRCond(SEXP X) {
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
+  return XMtd.partialPivLu().rcond();
 }
 
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
-double fMatSumDiffSquared(SEXP Xin, SEXP Yin) {
-  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
-  Eigen::Map<Eigen::MatrixXd> Y = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Yin));
-  return (X-Y).pow(2).sum();
+double fMatSumDiffSquared(SEXP X, SEXP Y) {
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+
+  if (!(Rf_isMatrix(Y) && (TYPEOF(Y) == REALSXP || TYPEOF(Y) == INTSXP || TYPEOF(Y) == LGLSXP))) {
+    Rcpp::stop("'Y' must be a numeric matrix");
+  }
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
+  Eigen::Map<Eigen::MatrixXd> YMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Y));
+  return (XMtd-YMtd).pow(2).sum();
 }
 

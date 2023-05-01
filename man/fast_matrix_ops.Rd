@@ -10,6 +10,8 @@
 \alias{fMatLeastSquare}
 \alias{fMatAdd}
 \alias{fMatSubtract}
+\alias{fMatElementWiseProduct}
+\alias{fMatElementWiseDivide}
 \alias{fMatRowSum}
 \alias{fMatColSum}
 \alias{fMatRowMin}
@@ -22,43 +24,49 @@
 \alias{fMatSumDiffSquared}
 \title{Functions that use oneMKL for fast matrix calculations through RcppEigen}
 \usage{
-fMatProd(Xin, Yin, is_X_symmetric = FALSE)
+fMatProd(X, Y, is_X_symmetric = FALSE)
 
-fMatTransProd(Xin, Yin, is_X_symmetric = FALSE)
+fMatTransProd(X, Y, is_X_symmetric = FALSE)
 
-fMatSolve(Xin, Yin, is_sym_pd = FALSE, is_invertible = FALSE)
+fMatSolve(X, Y, is_sym_pd = FALSE, is_invertible = FALSE)
 
-fMatInv(Xin, is_sym_pd = FALSE)
+fMatInv(X, is_sym_pd = FALSE)
 
-fMatPseudoInv(Xin)
+fMatPseudoInv(X)
 
 fMatLeastSquare(X, Y, stable = FALSE, is_X_full_rank = TRUE)
 
-fMatAdd(Xin, Yin)
+fMatAdd(X, Y)
 
-fMatSubtract(Xin, Yin)
+fMatSubtract(X, Y)
 
-fMatRowSum(Xin)
+fMatElementWiseProduct(X, Y)
 
-fMatColSum(Xin)
+fMatElementWiseDivide(X, Y)
 
-fMatRowMin(Xin)
+fMatRowSum(X)
 
-fMatColMin(Xin)
+fMatColSum(X)
 
-fMatRowMax(Xin)
+fMatRowMin(X)
 
-fMatColMax(Xin)
+fMatColMin(X)
 
-fMatDet(Xin)
+fMatRowMax(X)
 
-fMatRank(Xin)
+fMatColMax(X)
 
-fMatRCond(Xin)
+fMatDet(X)
 
-fMatSumDiffSquared(Xin, Yin)
+fMatRank(X)
+
+fMatRCond(X)
+
+fMatSumDiffSquared(X, Y)
 }
 \arguments{
+\item{X, Y}{The input matrices 'X' and 'Y'.}
+
 \item{is_X_symmetric}{A logical variable indicating whether the input matrix `X` is symmetric.
 Better computational performance is expected if the matrix is symmetric.}
 
@@ -67,8 +75,6 @@ Better computational performance is expected if the matrix is symmetric positive
 
 \item{is_invertible}{A logical variable indicating whether the input matrix `X` is invertible.
 Better computational performance is expected if the matrix is invertible for `fMatSolve`.}
-
-\item{X, Y}{The input matrices 'X' and 'Y'.}
 
 \item{stable}{A logical variable indicating whether to use a more stable
 but slower algorithm for `fMatLeastSquare`.}
@@ -98,6 +104,8 @@ If `stable` = TRUE, a more stable but slower algorithm will be applied.
 If `is_X_full_rank` = FALSE, the pseudo-inverse will be applied.}
 \item{\strong{fMatAdd}}{This function returns the sum of matrices `X` and `Y`, i.e., `X + Y`}
 \item{\strong{fMatSubtract}}{This function returns the result of the matrix `X` minus the matrix `Y`, namely, `X - Y`.}
+\item{\strong{fMatElementWiseProduct}}{This function returns the result of the matrix `X` element-wisely product the matrix `Y`, i.e. [Xij * Yij] for all i, j.}
+\item{\strong{fMatElementWiseDivide}}{This function returns the result of the matrix `X` element-wisely divided by the matrix `Y`, i.e. [Xij / Yij] for all i, j.}
 \item{\strong{fMatDet}}{This function returns the determinant of the matrix `X`.}
 \item{\strong{fMatRank}}{This function returns the rank of the matrix `X`.}
 \item{\strong{fMatRowSum}}{This function returns the sum of each row.}
@@ -122,6 +130,9 @@ fMatSolve(XtX, fMatTransProd(x, y)) # linear regression coefficients
 
 fMatAdd(x, z) # x + z
 fMatSubtract(x, z) # x - z
+
+fMatElementWiseProduct(x, z) # x * z
+fMatElementWiseDivide(x, z) # x / z
 
 fMatDet(x)
 fMatRank(x)

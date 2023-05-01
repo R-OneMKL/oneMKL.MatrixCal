@@ -60,36 +60,36 @@
 #' svdRes$U[ , 1:6] %*% diag(svdRes$d) %*% t(svdRes$V) #  Z = U D V'
 #' t(svdRes$U[ , 1:6]) %*% Z %*% svdRes$V #  D = U' Z V
 #' @export
-fMatChol <- function(Xin) {
-    .Call('_oneMKL_MatrixCal_fMatChol', PACKAGE = 'oneMKL.MatrixCal', Xin)
+fMatChol <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatChol', PACKAGE = 'oneMKL.MatrixCal', X)
 }
 
 #' @name fast_matrix_decomposition
 #' @export
-fMatLU <- function(Xin) {
-    .Call('_oneMKL_MatrixCal_fMatLU', PACKAGE = 'oneMKL.MatrixCal', Xin)
+fMatLU <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatLU', PACKAGE = 'oneMKL.MatrixCal', X)
 }
 
 #' @param with_permutation_matrix A logical variable indicating whether
 #' the QR decomposition is performed with a permutation matrix `P` returned.
 #' @name fast_matrix_decomposition
 #' @export
-fMatQR <- function(Xin, with_permutation_matrix = FALSE) {
-    .Call('_oneMKL_MatrixCal_fMatQR', PACKAGE = 'oneMKL.MatrixCal', Xin, with_permutation_matrix)
+fMatQR <- function(X, with_permutation_matrix = FALSE) {
+    .Call('_oneMKL_MatrixCal_fMatQR', PACKAGE = 'oneMKL.MatrixCal', X, with_permutation_matrix)
 }
 
 #' @param is_X_symmetric A logical variable indicating whether the input matrix `X` is symmetric.
 #'  If true, `fMatEigen` returns a real matrix. Otherwise, it returns a complex matrix.
 #' @name fast_matrix_decomposition
 #' @export
-fMatEigen <- function(Xin, is_X_symmetric = FALSE) {
-    .Call('_oneMKL_MatrixCal_fMatEigen', PACKAGE = 'oneMKL.MatrixCal', Xin, is_X_symmetric)
+fMatEigen <- function(X, is_X_symmetric = FALSE) {
+    .Call('_oneMKL_MatrixCal_fMatEigen', PACKAGE = 'oneMKL.MatrixCal', X, is_X_symmetric)
 }
 
 #' @name fast_matrix_decomposition
 #' @export
-fMatSVD <- function(Xin) {
-    .Call('_oneMKL_MatrixCal_fMatSVD', PACKAGE = 'oneMKL.MatrixCal', Xin)
+fMatSVD <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatSVD', PACKAGE = 'oneMKL.MatrixCal', X)
 }
 
 #' Functions that use oneMKL for fast matrix calculations through RcppEigen
@@ -112,6 +112,8 @@ fMatSVD <- function(Xin) {
 #' If `is_X_full_rank` = FALSE, the pseudo-inverse will be applied.}
 #' \item{\strong{fMatAdd}}{This function returns the sum of matrices `X` and `Y`, i.e., `X + Y`}
 #' \item{\strong{fMatSubtract}}{This function returns the result of the matrix `X` minus the matrix `Y`, namely, `X - Y`.}
+#' \item{\strong{fMatElementWiseProduct}}{This function returns the result of the matrix `X` element-wisely product the matrix `Y`, i.e. [Xij * Yij] for all i, j.}
+#' \item{\strong{fMatElementWiseDivide}}{This function returns the result of the matrix `X` element-wisely divided by the matrix `Y`, i.e. [Xij / Yij] for all i, j.}
 #' \item{\strong{fMatDet}}{This function returns the determinant of the matrix `X`.}
 #' \item{\strong{fMatRank}}{This function returns the rank of the matrix `X`.}
 #' \item{\strong{fMatRowSum}}{This function returns the sum of each row.}
@@ -142,6 +144,9 @@ fMatSVD <- function(Xin) {
 #' fMatAdd(x, z) # x + z
 #' fMatSubtract(x, z) # x - z
 #'
+#' fMatElementWiseProduct(x, z) # x * z
+#' fMatElementWiseDivide(x, z) # x / z
+#'
 #' fMatDet(x)
 #' fMatRank(x)
 #'
@@ -154,14 +159,14 @@ fMatSVD <- function(Xin) {
 #' @rdname fast_matrix_ops
 #' @name fast_matrix_ops
 #' @export
-fMatProd <- function(Xin, Yin, is_X_symmetric = FALSE) {
-    .Call('_oneMKL_MatrixCal_fMatProd', PACKAGE = 'oneMKL.MatrixCal', Xin, Yin, is_X_symmetric)
+fMatProd <- function(X, Y, is_X_symmetric = FALSE) {
+    .Call('_oneMKL_MatrixCal_fMatProd', PACKAGE = 'oneMKL.MatrixCal', X, Y, is_X_symmetric)
 }
 
 #' @name fast_matrix_ops
 #' @export
-fMatTransProd <- function(Xin, Yin, is_X_symmetric = FALSE) {
-    .Call('_oneMKL_MatrixCal_fMatTransProd', PACKAGE = 'oneMKL.MatrixCal', Xin, Yin, is_X_symmetric)
+fMatTransProd <- function(X, Y, is_X_symmetric = FALSE) {
+    .Call('_oneMKL_MatrixCal_fMatTransProd', PACKAGE = 'oneMKL.MatrixCal', X, Y, is_X_symmetric)
 }
 
 #' @param is_invertible A logical variable indicating whether the input matrix `X` is invertible.
@@ -170,20 +175,20 @@ fMatTransProd <- function(Xin, Yin, is_X_symmetric = FALSE) {
 #'  Better computational performance is expected if the matrix is symmetric positive definitive for `fMatSolve` and `fMatInv`.
 #' @name fast_matrix_ops
 #' @export
-fMatSolve <- function(Xin, Yin, is_sym_pd = FALSE, is_invertible = FALSE) {
-    .Call('_oneMKL_MatrixCal_fMatSolve', PACKAGE = 'oneMKL.MatrixCal', Xin, Yin, is_sym_pd, is_invertible)
+fMatSolve <- function(X, Y, is_sym_pd = FALSE, is_invertible = FALSE) {
+    .Call('_oneMKL_MatrixCal_fMatSolve', PACKAGE = 'oneMKL.MatrixCal', X, Y, is_sym_pd, is_invertible)
 }
 
 #' @name fast_matrix_ops
 #' @export
-fMatInv <- function(Xin, is_sym_pd = FALSE) {
-    .Call('_oneMKL_MatrixCal_fMatInv', PACKAGE = 'oneMKL.MatrixCal', Xin, is_sym_pd)
+fMatInv <- function(X, is_sym_pd = FALSE) {
+    .Call('_oneMKL_MatrixCal_fMatInv', PACKAGE = 'oneMKL.MatrixCal', X, is_sym_pd)
 }
 
 #' @name fast_matrix_ops
 #' @export
-fMatPseudoInv <- function(Xin) {
-    .Call('_oneMKL_MatrixCal_fMatPseudoInv', PACKAGE = 'oneMKL.MatrixCal', Xin)
+fMatPseudoInv <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatPseudoInv', PACKAGE = 'oneMKL.MatrixCal', X)
 }
 
 #' @param stable A logical variable indicating whether to use a more stable
@@ -198,74 +203,86 @@ fMatLeastSquare <- function(X, Y, stable = FALSE, is_X_full_rank = TRUE) {
 
 #' @name fast_matrix_ops
 #' @export
-fMatAdd <- function(Xin, Yin) {
-    .Call('_oneMKL_MatrixCal_fMatAdd', PACKAGE = 'oneMKL.MatrixCal', Xin, Yin)
+fMatAdd <- function(X, Y) {
+    .Call('_oneMKL_MatrixCal_fMatAdd', PACKAGE = 'oneMKL.MatrixCal', X, Y)
 }
 
 #' @name fast_matrix_ops
 #' @export
-fMatSubtract <- function(Xin, Yin) {
-    .Call('_oneMKL_MatrixCal_fMatSubtract', PACKAGE = 'oneMKL.MatrixCal', Xin, Yin)
+fMatSubtract <- function(X, Y) {
+    .Call('_oneMKL_MatrixCal_fMatSubtract', PACKAGE = 'oneMKL.MatrixCal', X, Y)
 }
 
 #' @name fast_matrix_ops
 #' @export
-fMatRowSum <- function(Xin) {
-    .Call('_oneMKL_MatrixCal_fMatRowSum', PACKAGE = 'oneMKL.MatrixCal', Xin)
+fMatElementWiseProduct <- function(X, Y) {
+    .Call('_oneMKL_MatrixCal_fMatElementWiseProduct', PACKAGE = 'oneMKL.MatrixCal', X, Y)
 }
 
 #' @name fast_matrix_ops
 #' @export
-fMatColSum <- function(Xin) {
-    .Call('_oneMKL_MatrixCal_fMatColSum', PACKAGE = 'oneMKL.MatrixCal', Xin)
+fMatElementWiseDivide <- function(X, Y) {
+    .Call('_oneMKL_MatrixCal_fMatElementWiseDivide', PACKAGE = 'oneMKL.MatrixCal', X, Y)
 }
 
 #' @name fast_matrix_ops
 #' @export
-fMatRowMin <- function(Xin) {
-    .Call('_oneMKL_MatrixCal_fMatRowMin', PACKAGE = 'oneMKL.MatrixCal', Xin)
+fMatRowSum <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatRowSum', PACKAGE = 'oneMKL.MatrixCal', X)
 }
 
 #' @name fast_matrix_ops
 #' @export
-fMatColMin <- function(Xin) {
-    .Call('_oneMKL_MatrixCal_fMatColMin', PACKAGE = 'oneMKL.MatrixCal', Xin)
+fMatColSum <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatColSum', PACKAGE = 'oneMKL.MatrixCal', X)
 }
 
 #' @name fast_matrix_ops
 #' @export
-fMatRowMax <- function(Xin) {
-    .Call('_oneMKL_MatrixCal_fMatRowMax', PACKAGE = 'oneMKL.MatrixCal', Xin)
+fMatRowMin <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatRowMin', PACKAGE = 'oneMKL.MatrixCal', X)
 }
 
 #' @name fast_matrix_ops
 #' @export
-fMatColMax <- function(Xin) {
-    .Call('_oneMKL_MatrixCal_fMatColMax', PACKAGE = 'oneMKL.MatrixCal', Xin)
+fMatColMin <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatColMin', PACKAGE = 'oneMKL.MatrixCal', X)
 }
 
 #' @name fast_matrix_ops
 #' @export
-fMatDet <- function(Xin) {
-    .Call('_oneMKL_MatrixCal_fMatDet', PACKAGE = 'oneMKL.MatrixCal', Xin)
+fMatRowMax <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatRowMax', PACKAGE = 'oneMKL.MatrixCal', X)
 }
 
 #' @name fast_matrix_ops
 #' @export
-fMatRank <- function(Xin) {
-    .Call('_oneMKL_MatrixCal_fMatRank', PACKAGE = 'oneMKL.MatrixCal', Xin)
+fMatColMax <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatColMax', PACKAGE = 'oneMKL.MatrixCal', X)
 }
 
 #' @name fast_matrix_ops
 #' @export
-fMatRCond <- function(Xin) {
-    .Call('_oneMKL_MatrixCal_fMatRCond', PACKAGE = 'oneMKL.MatrixCal', Xin)
+fMatDet <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatDet', PACKAGE = 'oneMKL.MatrixCal', X)
 }
 
 #' @name fast_matrix_ops
 #' @export
-fMatSumDiffSquared <- function(Xin, Yin) {
-    .Call('_oneMKL_MatrixCal_fMatSumDiffSquared', PACKAGE = 'oneMKL.MatrixCal', Xin, Yin)
+fMatRank <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatRank', PACKAGE = 'oneMKL.MatrixCal', X)
+}
+
+#' @name fast_matrix_ops
+#' @export
+fMatRCond <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatRCond', PACKAGE = 'oneMKL.MatrixCal', X)
+}
+
+#' @name fast_matrix_ops
+#' @export
+fMatSumDiffSquared <- function(X, Y) {
+    .Call('_oneMKL_MatrixCal_fMatSumDiffSquared', PACKAGE = 'oneMKL.MatrixCal', X, Y)
 }
 
 #' Function to get the version of Intel MKL

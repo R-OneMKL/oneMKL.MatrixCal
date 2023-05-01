@@ -80,17 +80,23 @@
 //' t(svdRes$U[ , 1:6]) %*% Z %*% svdRes$V #  D = U' Z V
 //' @export
 // [[Rcpp::export]]
-Eigen::MatrixXd fMatChol(SEXP Xin){
-  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
-  return X.llt().matrixU();
+Eigen::MatrixXd fMatChol(SEXP X){
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
+  return XMtd.llt().matrixU();
 }
 
 //' @name fast_matrix_decomposition
 //' @export
 // [[Rcpp::export]]
-Rcpp::List fMatLU(SEXP Xin){
-  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
-  auto lu = X.partialPivLu();
+Rcpp::List fMatLU(SEXP X){
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
+  auto lu = XMtd.partialPivLu();
   auto luMatrix = lu.matrixLU();
   Eigen::MatrixXd L = luMatrix.triangularView<Eigen::StrictlyLower>();
   L.diagonal().setOnes();
@@ -108,10 +114,13 @@ Rcpp::List fMatLU(SEXP Xin){
 //' @name fast_matrix_decomposition
 //' @export
 // [[Rcpp::export]]
-Rcpp::List fMatQR(SEXP Xin, bool with_permutation_matrix = false){
-  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
+Rcpp::List fMatQR(SEXP X, bool with_permutation_matrix = false){
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
   if (with_permutation_matrix) {
-    auto pqr = X.colPivHouseholderQr();
+    auto pqr = XMtd.colPivHouseholderQr();
     Eigen::MatrixXd Q = pqr.householderQ();
     Eigen::MatrixXd R = pqr.matrixQR().triangularView<Eigen::Upper>();
     Eigen::ColPivHouseholderQR<Eigen::MatrixXd>::PermutationType PMat(pqr.colsPermutation());
@@ -120,7 +129,7 @@ Rcpp::List fMatQR(SEXP Xin, bool with_permutation_matrix = false){
       Rcpp::Named("P") = P, Rcpp::Named("Q") = Q, Rcpp::Named("R") = R
     );
   } else {
-    auto qr = X.householderQr();
+    auto qr = XMtd.householderQr();
     Eigen::MatrixXd Q = qr.householderQ();
     Eigen::MatrixXd R = qr.matrixQR().triangularView<Eigen::Upper>();
     return Rcpp::List::create(
@@ -134,15 +143,18 @@ Rcpp::List fMatQR(SEXP Xin, bool with_permutation_matrix = false){
 //' @name fast_matrix_decomposition
 //' @export
 // [[Rcpp::export]]
-Rcpp::List fMatEigen(SEXP Xin, bool is_X_symmetric = false){
-  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
+Rcpp::List fMatEigen(SEXP X, bool is_X_symmetric = false){
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
   if (is_X_symmetric) {
-    Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> es(X);
+    Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> es(XMtd);
     return Rcpp::List::create(
       Rcpp::Named("values") = es.eigenvalues(), Rcpp::Named("vectors") = es.eigenvectors()
     );
   } else {
-    Eigen::EigenSolver<Eigen::MatrixXd> es(X);
+    Eigen::EigenSolver<Eigen::MatrixXd> es(XMtd);
     return Rcpp::List::create(
       Rcpp::Named("values") = es.eigenvalues(), Rcpp::Named("vectors") = es.eigenvectors()
     );
@@ -152,9 +164,12 @@ Rcpp::List fMatEigen(SEXP Xin, bool is_X_symmetric = false){
 //' @name fast_matrix_decomposition
 //' @export
 // [[Rcpp::export]]
-Rcpp::List fMatSVD(SEXP Xin){
-  Eigen::Map<Eigen::MatrixXd> X = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Xin));
-  auto svd = X.jacobiSvd(Eigen::ComputeFullV | Eigen::ComputeFullU);
+Rcpp::List fMatSVD(SEXP X){
+  if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
+    Rcpp::stop("'X' must be a numeric matrix");
+  }
+  Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
+  auto svd = XMtd.jacobiSvd(Eigen::ComputeFullV | Eigen::ComputeFullU);
   return Rcpp::List::create(
     Rcpp::Named("d") = svd.singularValues(),
     Rcpp::Named("U") = svd.matrixU(),
