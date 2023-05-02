@@ -95,6 +95,111 @@ fMatSVD <- function(X) {
 #' Functions that use oneMKL for fast matrix calculations through RcppEigen
 #'
 #' \describe{
+#' \item{\strong{fMatAdd}}{This function returns the sum of matrices `X` and `Y`, i.e., `X + Y`}
+#' \item{\strong{fMatSubtract}}{This function returns the result of the matrix `X` minus the matrix `Y`, namely, `X - Y`.}
+#' \item{\strong{fMatElementWiseProduct}}{This function returns the result of the matrix `X` element-wisely product the matrix `Y`, i.e. [Xij * Yij] for all i, j.}
+#' \item{\strong{fMatElementWiseDivide}}{This function returns the result of the matrix `X` element-wisely divided by the matrix `Y`, i.e. [Xij / Yij] for all i, j.}
+#' \item{\strong{fMatRowSum}}{This function returns the sum of each row.}
+#' \item{\strong{fMatColSum}}{This function returns the sum of each column.}
+#' \item{\strong{fMatRowMin}}{This function returns the minimum of each row.}
+#' \item{\strong{fMatRowMax}}{This function returns the maximum of each row.}
+#' \item{\strong{fMatColMin}}{This function returns the minimum of each column.}
+#' \item{\strong{fMatColMax}}{This function returns the maximum of each column.}
+#' \item{\strong{fMatSumDiffSquared}}{The function returns the result of square of `X` minus `Y`, i.e., `(X-Y)^2`, where `X` and `Y` are matrices.}
+#' }
+#'
+#' @param X,Y The input matrices 'X' and 'Y'.
+#' @return The corresponding results.
+#'
+#' @examples
+#' x <- matrix(rnorm(1e4), 100)
+#' y <- matrix(rnorm(1e2), 100)
+#' z <- matrix(rnorm(1e4), 100)
+#'
+#' fMatAdd(x, z) # x + z
+#' fMatSubtract(x, z) # x - z
+#'
+#' fMatElementWiseProduct(x, z) # x * z
+#' fMatElementWiseDivide(x, z) # x / z
+#'
+#' fMatColSum(x) # colSums(x)
+#' fMatRowSum(x) # rowSums(x)
+#' fMatRowMin(x) # apply(x, 1, min)
+#' fMatRowMax(x) # apply(x, 1, max)
+#' fMatColMin(x) # apply(x, 2, min)
+#' fMatColMax(x) # apply(x, 2, max)
+#'
+#' fMatSumDiffSquared(x, z) # sum((x-z)^2)
+#' @rdname fast_matrix_extra_ops
+#' @name fast_matrix_extra_ops
+#' @export
+fMatAdd <- function(X, Y) {
+    .Call('_oneMKL_MatrixCal_fMatAdd', PACKAGE = 'oneMKL.MatrixCal', X, Y)
+}
+
+#' @name fast_matrix_extra_ops
+#' @export
+fMatSubtract <- function(X, Y) {
+    .Call('_oneMKL_MatrixCal_fMatSubtract', PACKAGE = 'oneMKL.MatrixCal', X, Y)
+}
+
+#' @name fast_matrix_extra_ops
+#' @export
+fMatElementWiseProduct <- function(X, Y) {
+    .Call('_oneMKL_MatrixCal_fMatElementWiseProduct', PACKAGE = 'oneMKL.MatrixCal', X, Y)
+}
+
+#' @name fast_matrix_extra_ops
+#' @export
+fMatElementWiseDivide <- function(X, Y) {
+    .Call('_oneMKL_MatrixCal_fMatElementWiseDivide', PACKAGE = 'oneMKL.MatrixCal', X, Y)
+}
+
+#' @name fast_matrix_extra_ops
+#' @export
+fMatRowSum <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatRowSum', PACKAGE = 'oneMKL.MatrixCal', X)
+}
+
+#' @name fast_matrix_extra_ops
+#' @export
+fMatColSum <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatColSum', PACKAGE = 'oneMKL.MatrixCal', X)
+}
+
+#' @name fast_matrix_extra_ops
+#' @export
+fMatRowMin <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatRowMin', PACKAGE = 'oneMKL.MatrixCal', X)
+}
+
+#' @name fast_matrix_extra_ops
+#' @export
+fMatColMin <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatColMin', PACKAGE = 'oneMKL.MatrixCal', X)
+}
+
+#' @name fast_matrix_extra_ops
+#' @export
+fMatRowMax <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatRowMax', PACKAGE = 'oneMKL.MatrixCal', X)
+}
+
+#' @name fast_matrix_extra_ops
+#' @export
+fMatColMax <- function(X) {
+    .Call('_oneMKL_MatrixCal_fMatColMax', PACKAGE = 'oneMKL.MatrixCal', X)
+}
+
+#' @name fast_matrix_extra_ops
+#' @export
+fMatSumDiffSquared <- function(X, Y) {
+    .Call('_oneMKL_MatrixCal_fMatSumDiffSquared', PACKAGE = 'oneMKL.MatrixCal', X, Y)
+}
+
+#' Functions that use oneMKL for fast matrix calculations through RcppEigen
+#'
+#' \describe{
 #' \item{\strong{fMatProd}}{This function returns the multiplication of matrices `X` and `Y`, i.e., `XY`.}
 #' \item{\strong{fMatTransProd}}{This function returns the product of the transpose of the matrix `X`
 #'  and the matrix `Y`, i.e., `X^T Y`.}
@@ -108,21 +213,10 @@ fMatSVD <- function(X) {
 #'  will be used for better computational performance.}
 #' \item{\strong{fMatPseudoInv}}{This function returns the pseudo-inverse (also called generalized inverse or g-inverse) of the matrix 'X'.}
 #' \item{\strong{fMatLeastSquare}}{This function returns the solution of least square through QR decomposition.
-#' If `stable` = TRUE, a more stable but slower algorithm will be applied.
-#' If `is_X_full_rank` = FALSE, the pseudo-inverse will be applied.}
-#' \item{\strong{fMatAdd}}{This function returns the sum of matrices `X` and `Y`, i.e., `X + Y`}
-#' \item{\strong{fMatSubtract}}{This function returns the result of the matrix `X` minus the matrix `Y`, namely, `X - Y`.}
-#' \item{\strong{fMatElementWiseProduct}}{This function returns the result of the matrix `X` element-wisely product the matrix `Y`, i.e. [Xij * Yij] for all i, j.}
-#' \item{\strong{fMatElementWiseDivide}}{This function returns the result of the matrix `X` element-wisely divided by the matrix `Y`, i.e. [Xij / Yij] for all i, j.}
+#' If `stable` = TRUE, a more stable but slower algorithm will be applied.}
 #' \item{\strong{fMatDet}}{This function returns the determinant of the matrix `X`.}
 #' \item{\strong{fMatRank}}{This function returns the rank of the matrix `X`.}
-#' \item{\strong{fMatRowSum}}{This function returns the sum of each row.}
-#' \item{\strong{fMatColSum}}{This function returns the sum of each column.}
-#' \item{\strong{fMatRowMin}}{This function returns the minimum of each row.}
-#' \item{\strong{fMatRowMax}}{This function returns the maximum of each row.}
-#' \item{\strong{fMatColMin}}{This function returns the minimum of each column.}
-#' \item{\strong{fMatColMax}}{This function returns the maximum of each column.}
-#' \item{\strong{fMatSumDiffSquared}}{The function returns the result of square of `X` minus `Y`, i.e., `(X-Y)^2`, where `X` and `Y` are matrices.}
+#' \item{\strong{fMatRCond}}{This function returns the reciprocal condition number of the matrix `X`.}
 #' }
 #'
 #' @param X,Y The input matrices 'X' and 'Y'.
@@ -141,21 +235,9 @@ fMatSVD <- function(X) {
 #' invXtX <- fMatInv(XtX)
 #' fMatSolve(XtX, fMatTransProd(x, y)) # linear regression coefficients
 #'
-#' fMatAdd(x, z) # x + z
-#' fMatSubtract(x, z) # x - z
-#'
-#' fMatElementWiseProduct(x, z) # x * z
-#' fMatElementWiseDivide(x, z) # x / z
-#'
 #' fMatDet(x)
 #' fMatRank(x)
-#'
-#' fMatColSum(x) # colSums(x)
-#' fMatRowSum(x) # rowSums(x)
-#' fMatRowMin(x) # apply(x, 1, min)
-#' fMatRowMax(x) # apply(x, 1, max)
-#' fMatColMin(x) # apply(x, 2, min)
-#' fMatColMax(x) # apply(x, 2, max)
+#' fMatRCond(x)
 #' @rdname fast_matrix_ops
 #' @name fast_matrix_ops
 #' @export
@@ -203,66 +285,6 @@ fMatLeastSquare <- function(X, Y, stable = FALSE, is_X_full_rank = TRUE) {
 
 #' @name fast_matrix_ops
 #' @export
-fMatAdd <- function(X, Y) {
-    .Call('_oneMKL_MatrixCal_fMatAdd', PACKAGE = 'oneMKL.MatrixCal', X, Y)
-}
-
-#' @name fast_matrix_ops
-#' @export
-fMatSubtract <- function(X, Y) {
-    .Call('_oneMKL_MatrixCal_fMatSubtract', PACKAGE = 'oneMKL.MatrixCal', X, Y)
-}
-
-#' @name fast_matrix_ops
-#' @export
-fMatElementWiseProduct <- function(X, Y) {
-    .Call('_oneMKL_MatrixCal_fMatElementWiseProduct', PACKAGE = 'oneMKL.MatrixCal', X, Y)
-}
-
-#' @name fast_matrix_ops
-#' @export
-fMatElementWiseDivide <- function(X, Y) {
-    .Call('_oneMKL_MatrixCal_fMatElementWiseDivide', PACKAGE = 'oneMKL.MatrixCal', X, Y)
-}
-
-#' @name fast_matrix_ops
-#' @export
-fMatRowSum <- function(X) {
-    .Call('_oneMKL_MatrixCal_fMatRowSum', PACKAGE = 'oneMKL.MatrixCal', X)
-}
-
-#' @name fast_matrix_ops
-#' @export
-fMatColSum <- function(X) {
-    .Call('_oneMKL_MatrixCal_fMatColSum', PACKAGE = 'oneMKL.MatrixCal', X)
-}
-
-#' @name fast_matrix_ops
-#' @export
-fMatRowMin <- function(X) {
-    .Call('_oneMKL_MatrixCal_fMatRowMin', PACKAGE = 'oneMKL.MatrixCal', X)
-}
-
-#' @name fast_matrix_ops
-#' @export
-fMatColMin <- function(X) {
-    .Call('_oneMKL_MatrixCal_fMatColMin', PACKAGE = 'oneMKL.MatrixCal', X)
-}
-
-#' @name fast_matrix_ops
-#' @export
-fMatRowMax <- function(X) {
-    .Call('_oneMKL_MatrixCal_fMatRowMax', PACKAGE = 'oneMKL.MatrixCal', X)
-}
-
-#' @name fast_matrix_ops
-#' @export
-fMatColMax <- function(X) {
-    .Call('_oneMKL_MatrixCal_fMatColMax', PACKAGE = 'oneMKL.MatrixCal', X)
-}
-
-#' @name fast_matrix_ops
-#' @export
 fMatDet <- function(X) {
     .Call('_oneMKL_MatrixCal_fMatDet', PACKAGE = 'oneMKL.MatrixCal', X)
 }
@@ -277,12 +299,6 @@ fMatRank <- function(X) {
 #' @export
 fMatRCond <- function(X) {
     .Call('_oneMKL_MatrixCal_fMatRCond', PACKAGE = 'oneMKL.MatrixCal', X)
-}
-
-#' @name fast_matrix_ops
-#' @export
-fMatSumDiffSquared <- function(X, Y) {
-    .Call('_oneMKL_MatrixCal_fMatSumDiffSquared', PACKAGE = 'oneMKL.MatrixCal', X, Y)
 }
 
 #' Function to get the version of Intel MKL
@@ -321,5 +337,9 @@ getMKLThreads <- function() {
 
 cast_numeric <- function(input) {
     .Call('_oneMKL_MatrixCal_cast_numeric', PACKAGE = 'oneMKL.MatrixCal', input)
+}
+
+cast_integer <- function(input) {
+    .Call('_oneMKL_MatrixCal_cast_integer', PACKAGE = 'oneMKL.MatrixCal', input)
 }
 

@@ -26,7 +26,10 @@ if (require("RUnit", quietly = TRUE)) {
     path <- system.file("unitTests", package = pkg)
 
   ## Define tests
-  testSuite <- defineTestSuite(paste(pkg, "unit testing"), path, "^test-.+\\.[rR]$")
+  testSuite <- defineTestSuite(
+    paste(pkg, "unit testing"), path,
+    "^test-.+\\.[rR]$", rngKind = "Mersenne-Twister"
+  )
 
   if (interactive()) {
     cat("Now have RUnit Test Suite 'testSuite' for package '", pkg, "' :\n", sep='')

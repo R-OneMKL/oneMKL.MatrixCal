@@ -8,20 +8,9 @@
 \alias{fMatInv}
 \alias{fMatPseudoInv}
 \alias{fMatLeastSquare}
-\alias{fMatAdd}
-\alias{fMatSubtract}
-\alias{fMatElementWiseProduct}
-\alias{fMatElementWiseDivide}
-\alias{fMatRowSum}
-\alias{fMatColSum}
-\alias{fMatRowMin}
-\alias{fMatColMin}
-\alias{fMatRowMax}
-\alias{fMatColMax}
 \alias{fMatDet}
 \alias{fMatRank}
 \alias{fMatRCond}
-\alias{fMatSumDiffSquared}
 \title{Functions that use oneMKL for fast matrix calculations through RcppEigen}
 \usage{
 fMatProd(X, Y, is_X_symmetric = FALSE)
@@ -36,33 +25,11 @@ fMatPseudoInv(X)
 
 fMatLeastSquare(X, Y, stable = FALSE, is_X_full_rank = TRUE)
 
-fMatAdd(X, Y)
-
-fMatSubtract(X, Y)
-
-fMatElementWiseProduct(X, Y)
-
-fMatElementWiseDivide(X, Y)
-
-fMatRowSum(X)
-
-fMatColSum(X)
-
-fMatRowMin(X)
-
-fMatColMin(X)
-
-fMatRowMax(X)
-
-fMatColMax(X)
-
 fMatDet(X)
 
 fMatRank(X)
 
 fMatRCond(X)
-
-fMatSumDiffSquared(X, Y)
 }
 \arguments{
 \item{X, Y}{The input matrices 'X' and 'Y'.}
@@ -100,21 +67,10 @@ The corresponding results.
  will be used for better computational performance.}
 \item{\strong{fMatPseudoInv}}{This function returns the pseudo-inverse (also called generalized inverse or g-inverse) of the matrix 'X'.}
 \item{\strong{fMatLeastSquare}}{This function returns the solution of least square through QR decomposition.
-If `stable` = TRUE, a more stable but slower algorithm will be applied.
-If `is_X_full_rank` = FALSE, the pseudo-inverse will be applied.}
-\item{\strong{fMatAdd}}{This function returns the sum of matrices `X` and `Y`, i.e., `X + Y`}
-\item{\strong{fMatSubtract}}{This function returns the result of the matrix `X` minus the matrix `Y`, namely, `X - Y`.}
-\item{\strong{fMatElementWiseProduct}}{This function returns the result of the matrix `X` element-wisely product the matrix `Y`, i.e. [Xij * Yij] for all i, j.}
-\item{\strong{fMatElementWiseDivide}}{This function returns the result of the matrix `X` element-wisely divided by the matrix `Y`, i.e. [Xij / Yij] for all i, j.}
+If `stable` = TRUE, a more stable but slower algorithm will be applied.}
 \item{\strong{fMatDet}}{This function returns the determinant of the matrix `X`.}
 \item{\strong{fMatRank}}{This function returns the rank of the matrix `X`.}
-\item{\strong{fMatRowSum}}{This function returns the sum of each row.}
-\item{\strong{fMatColSum}}{This function returns the sum of each column.}
-\item{\strong{fMatRowMin}}{This function returns the minimum of each row.}
-\item{\strong{fMatRowMax}}{This function returns the maximum of each row.}
-\item{\strong{fMatColMin}}{This function returns the minimum of each column.}
-\item{\strong{fMatColMax}}{This function returns the maximum of each column.}
-\item{\strong{fMatSumDiffSquared}}{The function returns the result of square of `X` minus `Y`, i.e., `(X-Y)^2`, where `X` and `Y` are matrices.}
+\item{\strong{fMatRCond}}{This function returns the reciprocal condition number of the matrix `X`.}
 }
 }
 \examples{
@@ -128,19 +84,7 @@ all.equal(XtX, XtX2) # TRUE
 invXtX <- fMatInv(XtX)
 fMatSolve(XtX, fMatTransProd(x, y)) # linear regression coefficients
 
-fMatAdd(x, z) # x + z
-fMatSubtract(x, z) # x - z
-
-fMatElementWiseProduct(x, z) # x * z
-fMatElementWiseDivide(x, z) # x / z
-
 fMatDet(x)
 fMatRank(x)
-
-fMatColSum(x) # colSums(x)
-fMatRowSum(x) # rowSums(x)
-fMatRowMin(x) # apply(x, 1, min)
-fMatRowMax(x) # apply(x, 1, max)
-fMatColMin(x) # apply(x, 2, min)
-fMatColMax(x) # apply(x, 2, max)
+fMatRCond(x)
 }

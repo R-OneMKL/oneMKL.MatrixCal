@@ -1,11 +1,12 @@
 library(oneMKL.MatrixCal)
+library(dqrng)
 
 hilbert <- function(n) { i <- 1:n; 1 / outer(i - 1, i, "+") }
 
 testMatOps <- function() {
-  set.seed(100)
-  x <- matrix(rnorm(3e4), 300)
-  z <- matrix(rnorm(3e4), 300)
+  dqset.seed(100)
+  x <- matrix(dqrnorm(3e4), 300)
+  z <- matrix(dqrnorm(3e4), 300)
 
   # fMatProd,fMatTransProd
   checkEquals(t(x) %*% x, fMatProd(t(x), x))
@@ -15,7 +16,7 @@ testMatOps <- function() {
   s <- hilbert(300)
   checkEquals(s %*% x, fMatProd(s, x, TRUE))
 
-  b <- matrix(rnorm(300), 300)
+  b <- matrix(dqrnorm(300), 300)
   checkEquals(s %*% b, fMatProd(s, b, TRUE))
 
   # fMatAdd, fMatSubtract
@@ -36,15 +37,15 @@ testMatInverse <- function() {
 
   # fMatInv 9*9
   set.seed(100)
-  z2 <- matrix(rnorm(81), 9)
+  z2 <- matrix(dqrnorm(81), 9)
   checkEquals(fMatInv(z2), solve(z2))
   checkEquals(fMatInv(z2) %*% z2, diag(1, 9))
 
   # test least square
   set.seed(100)
-  x <- matrix(rnorm(3e4), 300, 100)
-  beta <- matrix(rnorm(1e2), 100)
-  y <- fMatProd(x, beta) + rnorm(300)
+  x <- matrix(dqrnorm(3e4), 300, 100)
+  beta <- matrix(dqrnorm(1e2), 100)
+  y <- fMatProd(x, beta) + dqrnorm(300)
   checkEquals(solve(t(x) %*% x, t(x) %*% y), fMatSolve(fMatTransProd(x, x), fMatTransProd(x, y)))
   checkEquals(solve(t(x) %*% x, t(x) %*% y), fMatLeastSquare(x, y))
   checkEquals(solve(t(x) %*% x, t(x) %*% y), fMatLeastSquare(x, y, FALSE))
@@ -52,9 +53,9 @@ testMatInverse <- function() {
   # test if X is not full-rank
   if (require("pracma", quietly = TRUE)) {
     set.seed(100)
-    x <- matrix(rnorm(3e3), 30, 100)
-    beta <- matrix(rnorm(1e2), 100)
-    y <- fMatProd(x, beta) + rnorm(30)
+    x <- matrix(dqrnorm(3e3), 30, 100)
+    beta <- matrix(dqrnorm(1e2), 100)
+    y <- fMatProd(x, beta) + dqrnorm(30)
     checkEquals(pracma::pinv(t(x) %*% x) %*% t(x) %*% y, fMatLeastSquare(x, y, is_X_full_rank = FALSE))
   } else {
     cat("R package 'pracma' cannot be loaded -- the least square for X which is not full-rank will be skipped.\n")
