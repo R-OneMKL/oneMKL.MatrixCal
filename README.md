@@ -7,7 +7,7 @@ are performed using the optimized algorithms embedded in the
 **Intel oneAPI Math Kernel Library** (`oneMKL`). Because of this feature,
 the computational performance can be significantly improved. To make the package
 function work correctly with Intel `oneMKL`, users must first install the package,
-`oneMKL`, to import Intel `oneMKL` into R. The package also supports multithreaded
+`oneMKL`, to import Intel `oneMKL` into R. The `oneMKL.MatrixCal` package also supports multithreaded
 computations, enabling users to utilize the benefit of multiple CPU cores,
 i.e., parallel computing, to handle large-scale matrix computations.
 The package is not only compatible with Linux, but aslo Windows operating systems,
