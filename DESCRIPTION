@@ -36,7 +36,7 @@ Description: The `oneMKL.MatrixCal` package provides an efficient and powerful t
   i.e., parallel computing, to handle large-scale matrix computations.
   The package is not only compatible with Linux, but aslo Windows operating systems,
   which can benefit a wide range of users.
-Depends: R (>= 4.2.0)
+Depends: R
 Imports: Rcpp (>= 1.0.0), oneMKL, RcppEigen
 Suggests: RUnit, pracma, roxygen2
 LinkingTo: Rcpp, oneMKL, RcppEigen
