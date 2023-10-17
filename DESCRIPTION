@@ -1,7 +1,7 @@
 Package: oneMKL.MatrixCal
 Type: Package
 Title: Matrix Operation Functions Based on Intel oneMKL
-Version: 0.1.2022
+Version: 0.1.2023
 Authors@R: c(
     person(given = "Ching-Chuan",
            family = "Chen",
@@ -36,9 +36,9 @@ Description: The `oneMKL.MatrixCal` package provides an efficient and powerful t
   i.e., parallel computing, to handle large-scale matrix computations.
   The package is not only compatible with Linux, but aslo Windows operating systems,
   which can benefit a wide range of users.
-Depends: R
+Depends: R (>= 4.0.0)
 Imports: Rcpp (>= 1.0.0), oneMKL, RcppEigen
-Suggests: RUnit, pracma, roxygen2
+Suggests: RUnit, pracma, roxygen2, dqrng
 LinkingTo: Rcpp, oneMKL, RcppEigen
 SystemRequirements: GNU make
 License: GPL-3
