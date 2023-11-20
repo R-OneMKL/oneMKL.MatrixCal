@@ -84,6 +84,11 @@ Eigen::MatrixXd fMatChol(SEXP X){
   if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
     Rcpp::stop("'X' must be a numeric matrix");
   }
+
+  if (Rf_nrows(X) != Rf_ncols(X)) {
+    Rcpp::stop("X must be a square matrix");
+  }
+
   Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
   return XMtd.llt().matrixU();
 }
@@ -147,6 +152,12 @@ Rcpp::List fMatEigen(SEXP X, bool is_X_symmetric = false){
   if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
     Rcpp::stop("'X' must be a numeric matrix");
   }
+
+  if (Rf_nrows(X) != Rf_ncols(X)) {
+    Rcpp::stop("X must be a square matrix");
+  }
+
+
   Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
   if (is_X_symmetric) {
     Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> es(XMtd);

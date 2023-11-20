@@ -1,7 +1,7 @@
 Package: oneMKL.MatrixCal
 Type: Package
 Title: Matrix Operation Functions Based on Intel oneMKL
-Version: 0.1.2023
+Version: 0.2.2023
 Authors@R: c(
     person(given = "Ching-Chuan",
            family = "Chen",

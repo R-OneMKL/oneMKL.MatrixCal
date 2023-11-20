@@ -4,6 +4,7 @@ hilbert <- function(n) { i <- 1:n; 1 / outer(i - 1, i, "+") }
 testMatChol <- function() {
   X <- hilbert(9)
   checkEquals(fMatChol(X), chol(X))
+  checkException(fMatChol(x[ , 1:2]))
 }
 
 testMatQr <- function() {
@@ -37,6 +38,7 @@ testMatEigen <- function() {
   X <- hilbert(16)
   eigenRes1 <- fMatEigen(X)
   checkTrue(all(abs(Re(eigenRes1$vectors %*% diag(eigenRes1$values) %*% solve(eigenRes1$vectors)) - X) < 1e-6))
+  checkException(fMatChol(x[ , 1:2]))
 
   eigenRes2 <- fMatEigen(X, TRUE)
   checkTrue(all(abs(eigenRes2$vectors %*% diag(eigenRes2$values) %*% fMatInv(eigenRes2$vectors) - X) < 1e-6))

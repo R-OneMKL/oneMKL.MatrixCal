@@ -71,6 +71,10 @@ SEXP fMatAdd(SEXP X, SEXP Y) {
     Rcpp::stop("'Y' must be a numeric matrix");
   }
 
+  if ((Rf_nrows(X) != Rf_nrows(Y)) || (Rf_ncols(X) != Rf_ncols(Y))) {
+    Rcpp::stop("X and Y must have the same dimensions");
+  }
+
   if ((TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP) && (TYPEOF(Y) == REALSXP || TYPEOF(Y) == INTSXP)) {
     Eigen::Map<Eigen::MatrixXi> XMti = Rcpp::as<Eigen::Map<Eigen::MatrixXi>>(cast_integer(X));
     Eigen::Map<Eigen::MatrixXi> YMti = Rcpp::as<Eigen::Map<Eigen::MatrixXi>>(cast_integer(Y));
@@ -92,6 +96,10 @@ SEXP fMatSubtract(SEXP X, SEXP Y) {
 
   if (!(Rf_isMatrix(Y) && (TYPEOF(Y) == REALSXP || TYPEOF(Y) == INTSXP || TYPEOF(Y) == LGLSXP))) {
     Rcpp::stop("'Y' must be a numeric matrix");
+  }
+
+  if ((Rf_nrows(X) != Rf_nrows(Y)) || (Rf_ncols(X) != Rf_ncols(Y))) {
+    Rcpp::stop("X and Y must have the same dimensions");
   }
 
   if ((TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP) && (TYPEOF(Y) == REALSXP || TYPEOF(Y) == INTSXP)) {
@@ -117,6 +125,10 @@ SEXP fMatElementWiseProduct(SEXP X, SEXP Y) {
     Rcpp::stop("'Y' must be a numeric matrix");
   }
 
+  if ((Rf_nrows(X) != Rf_nrows(Y)) || (Rf_ncols(X) != Rf_ncols(Y))) {
+    Rcpp::stop("X and Y must have the same dimensions");
+  }
+
   if ((TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP) && (TYPEOF(Y) == REALSXP || TYPEOF(Y) == INTSXP)) {
     Eigen::Map<Eigen::MatrixXi> XMti = Rcpp::as<Eigen::Map<Eigen::MatrixXi>>(cast_integer(X));
     Eigen::Map<Eigen::MatrixXi> YMti = Rcpp::as<Eigen::Map<Eigen::MatrixXi>>(cast_integer(Y));
@@ -138,6 +150,10 @@ SEXP fMatElementWiseDivide(SEXP X, SEXP Y) {
 
   if (!(Rf_isMatrix(Y) && (TYPEOF(Y) == REALSXP || TYPEOF(Y) == INTSXP || TYPEOF(Y) == LGLSXP))) {
     Rcpp::stop("'Y' must be a numeric matrix");
+  }
+
+  if ((Rf_nrows(X) != Rf_nrows(Y)) || (Rf_ncols(X) != Rf_ncols(Y))) {
+    Rcpp::stop("X and Y must have the same dimensions");
   }
 
   Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
@@ -256,6 +272,10 @@ double fMatSumDiffSquared(SEXP X, SEXP Y) {
 
   if (!(Rf_isMatrix(Y) && (TYPEOF(Y) == REALSXP || TYPEOF(Y) == INTSXP || TYPEOF(Y) == LGLSXP))) {
     Rcpp::stop("'Y' must be a numeric matrix");
+  }
+
+  if ((Rf_nrows(X) != Rf_nrows(Y)) || (Rf_ncols(X) != Rf_ncols(Y))) {
+    Rcpp::stop("X and Y must have the same dimensions");
   }
 
   Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));

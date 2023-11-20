@@ -74,10 +74,12 @@ Eigen::MatrixXd fMatProd(SEXP X, SEXP Y, bool is_X_symmetric = false) {
     Rcpp::stop("'Y' must be a numeric matrix");
   }
 
+  if (Rf_ncols(X) != Rf_nrows(Y)) {
+    Rcpp::stop("The number of rows of Y must be equal to the number of columns of X");
+  }
+
   Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
-  int *ydims;
-  ydims = INTEGER(Rf_coerceVector(Rf_getAttrib(Y, R_DimSymbol), INTSXP));
-  if (ydims[1] == 1) {
+  if (Rf_ncols(Y) == 1) {
     // to have the best performance
     Eigen::Map<Eigen::VectorXd> b = Rcpp::as<Eigen::Map<Eigen::VectorXd>>(cast_numeric(Y));
     if (is_X_symmetric) {
@@ -105,6 +107,10 @@ Eigen::MatrixXd fMatTransProd(SEXP X, SEXP Y, bool is_X_symmetric = false) {
 
   if (!(Rf_isMatrix(Y) && (TYPEOF(Y) == REALSXP || TYPEOF(Y) == INTSXP || TYPEOF(Y) == LGLSXP))) {
     Rcpp::stop("'Y' must be a numeric matrix");
+  }
+
+  if (Rf_nrows(X) != Rf_nrows(Y)) {
+    Rcpp::stop("The number of rows of Y must be equal to the number of rows of X");
   }
 
   Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
@@ -147,6 +153,15 @@ Eigen::MatrixXd fMatSolve(
   if (!(Rf_isMatrix(Y) && (TYPEOF(Y) == REALSXP || TYPEOF(Y) == INTSXP || TYPEOF(Y) == LGLSXP))) {
     Rcpp::stop("'Y' must be a numeric matrix");
   }
+
+  if (Rf_nrows(X) != Rf_ncols(X)) {
+    Rcpp::stop("X must be a square matrix");
+  }
+
+  if (Rf_nrows(X) != Rf_nrows(Y)) {
+    Rcpp::stop("The number of rows of Y must be equal to the number of columns/rows of X");
+  }
+
   Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
   Eigen::Map<Eigen::MatrixXd> YMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Y));
   if (is_sym_pd) {
@@ -165,6 +180,11 @@ Eigen::MatrixXd fMatInv(SEXP X, bool is_sym_pd = false) {
   if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
     Rcpp::stop("'X' must be a numeric matrix");
   }
+
+  if (Rf_nrows(X) != Rf_ncols(X)) {
+    Rcpp::stop("X must be a square matrix");
+  }
+
   Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
   if (is_sym_pd) {
     Eigen::MatrixXd I = Eigen::MatrixXd::Identity(XMtd.rows(), XMtd.cols());
@@ -204,6 +224,11 @@ Eigen::MatrixXd fMatLeastSquare(
   if (!(Rf_isMatrix(Y) && (TYPEOF(Y) == REALSXP || TYPEOF(Y) == INTSXP || TYPEOF(Y) == LGLSXP))) {
     Rcpp::stop("'Y' must be a numeric matrix");
   }
+
+  if (Rf_nrows(X) != Rf_nrows(Y)) {
+    Rcpp::stop("The number of rows of Y must be equal to the number of rows of X");
+  }
+
   Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
   Eigen::Map<Eigen::MatrixXd> YMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(Y));
   if (is_X_full_rank) {
@@ -224,6 +249,11 @@ double fMatDet(SEXP X) {
   if (!(Rf_isMatrix(X) && (TYPEOF(X) == REALSXP || TYPEOF(X) == INTSXP || TYPEOF(X) == LGLSXP))) {
     Rcpp::stop("'X' must be a numeric matrix");
   }
+
+  if (Rf_nrows(X) != Rf_ncols(X)) {
+    Rcpp::stop("X must be a square matrix");
+  }
+
   Eigen::Map<Eigen::MatrixXd> XMtd = Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(cast_numeric(X));
   return XMtd.determinant();
 }

@@ -3,6 +3,19 @@ library(dqrng)
 
 testMatRowWiseOps <- function() {
   dqset.seed(100)
+  x <- matrix(dqrnorm(3e4), 300)
+  z <- matrix(dqrnorm(3e4), 300)
+
+  # fMatAdd, fMatSubtract
+  checkEquals(fMatAdd(x, z), x + z)
+  checkEquals(fMatSubtract(x, z), x - z)
+
+  checkException(fMatAdd(x, b))
+  checkException(fMatSubtract(x, b))
+}
+
+testMatRowWiseOps <- function() {
+  dqset.seed(100)
   x1 <- matrix(dqrnorm(3e4), 300)
   x2 <- matrix(as.integer(round(dqrnorm(3e4))), 300)
 
@@ -50,6 +63,10 @@ testMatElementWiseOps <- function() {
 
   # fMatElementWiseDivide
   checkTrue(all.equal(fMatElementWiseDivide(x1, x3), x1/x3))
+
+  # check condition is validated
+  checkException(fMatElementWiseProduct(x1, x1[1:100, ]))
+  checkException(fMatElementWiseDivide(x1, x1[1:100, ]))
 }
 
 testMatSpecialOps <- function() {
@@ -58,4 +75,5 @@ testMatSpecialOps <- function() {
   x2 <- matrix(dqrnorm(3e4), 300)
 
   checkTrue(all.equal(fMatSumDiffSquared(x1, x2), sum((x1-x2)^2)))
+  checkException(fMatSumDiffSquared(x1, x2[1:100, ]))
 }

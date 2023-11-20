@@ -12,6 +12,9 @@ testMatOps <- function() {
   checkEquals(t(x) %*% x, fMatProd(t(x), x))
   checkEquals(t(x) %*% x, fMatTransProd(x, x))
 
+  checkException(fMatProd(x, x))
+  checkException(fMatTransProd(t(x), x))
+
   # test is_X_symmetric
   s <- hilbert(300)
   checkEquals(s %*% x, fMatProd(s, x, TRUE))
@@ -19,16 +22,19 @@ testMatOps <- function() {
   b <- matrix(dqrnorm(300), 300)
   checkEquals(s %*% b, fMatProd(s, b, TRUE))
 
-  # fMatAdd, fMatSubtract
-  checkEquals(fMatAdd(x, z), x + z)
-  checkEquals(fMatSubtract(x, z), x - z)
-
   # fMatDet
   XtX <- fMatTransProd(x, x)
   checkEquals(fMatDet(XtX), det(XtX))
+
+  checkException(fMatDet(x))
 }
 
 testMatInverse <- function() {
+  # check condition is allowed
+  checkException(fMatInv(matrix(1:2, 1)))
+  checkException(fMatSolve(matrix(1:2, 1), 1:3))
+  checkException(fMatLeastSquare(matrix(1:2, 1), 1:3))
+
   # fMatInv 2*2
   z <- matrix(c(4, 3, 3, 5), 2)
   checkEquals(fMatInv(z), solve(z))
